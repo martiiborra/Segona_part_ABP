@@ -1,0 +1,111 @@
+package minitennis.language;
+
+import minitennis.utils.Utils;
+
+/**
+ * Definició de la classe ControlLanguage.
+ * Aquesta classe actua com donar una definició per cada opció escollida.
+ * La seva funció és depenent de l'opció d'idioma escollida (àngles, català i castellà)
+ * doncs retorna les seves definicions
+ * * @autor André Medinas, Candela Cabello, Daner Coria, Izan Perez i Adrià Chenovart
+ */
+public class ControlLanguage {
+	// Defineixen els identificadors d'idioma suportats per l'aplicació
+	private final String IDIOMA_PER_DEFECTE = Utils.LANG_EN;
+	final static String CATALA = Utils.LANG_CAT;
+	final static String CASTELLA = Utils.LANG_ES;
+	final static String ANGLES = Utils.LANG_EN;
+	
+	//Emmagatzema el codi de l'idioma actiu en la instància
+	private String idiomaActual = Utils.LANG_EN;
+	
+	/**
+    * Mètode mutador per definir l'idioma de treball.
+    * @param idioma Codi de l'idioma
+    */
+	public void setIdiomaActual(String idioma) {
+		this.idiomaActual = idioma; // Assignació de la referència a l'atribut d'instància
+	}
+	
+	/**
+    * Mètode d'accés per obtenir l'idioma actual.
+    * @return El codi de l'idioma actual
+    */
+	public String getIdiomaActual() {
+		return this.idiomaActual;
+	}
+	
+	/**
+    * Mètode d'accés per obtenir la traducció d'una etiqueta.
+    * Implementa una lògica de selecció múltiple per resoldre
+    * la cadena de text corresponent a la clau i l'idioma actual.
+    * @param clau Identificador únic del text.
+    * @return El text traduït o un missatge d'error si l'idioma no existeix.
+    */
+	public String get(String clau) {
+		// Estructura de control per a la selecció de l'idioma
+		switch (idiomaActual) {
+
+		case CATALA: // Cas en què l'idioma actiu és el Català
+            switch (clau) {
+            case "titol_menu": return "RETRO TENNIS"; // Corregit de titol:menu a titol_menu per coherència
+            case "regles": return "Regles: Mou la pala per evitar que la bola caigui.";
+            case "nivell": return "NIVELL: ";
+            case "boto_acceptar": return "JUGAR";
+            case "nom_usuari": return "Introdueix el teu nom:";
+            case "error_nom": return "Has d'introduir un nom!";
+            case "controles": return "CONTROLS";
+            case "info_controles": return "Fletxes o Ratolí per moure la pala.";
+            case "cambiar_idioma": return "CANVIAR IDIOMA";
+            case "sortir": return "SORTIR";
+            case "guia_menu": return "Fletxes per navegar, ENTER per seleccionar";
+            case "game_over_titol": return "FI DE LA PARTIDA"; // Claus afegides per al rànquing
+            case "jugador": return "Jugador";
+            case "puntuacio": return "Puntuació";
+            case "ranking_titol": return "TOP 10 RÀNQUING ";
+            case "tornar_jugar": return "Vols tornar a jugar?";
+            default: return clau; 
+            }
+        case CASTELLA: // Cas en què l'idioma actiu és el Castellà
+            switch (clau) {
+            case "titol_menu": return "RETRO TENNIS";
+            case "regles": return "Reglas: Mueve la pala para evitar que la bola caiga.";
+            case "nivell": return "NIVEL: ";
+            case "boto_acceptar": return "JUGAR";
+            case "nom_usuari": return "Introduce tu nombre:";
+            case "error_nom": return "¡Debes introducir un nombre!";
+            case "controles": return "CONTROLES";
+            case "info_controles": return "Flechas o Ratón para mover la pala.";
+            case "cambiar_idioma": return "CAMBIAR IDIOMA";
+            case "sortir": return "SALIR";
+            case "guia_menu": return "Flechas para navegar, ENTER para seleccionar";
+            case "game_over_titol": return "JUEGO TERMINADO"; 
+            case "jugador": return "Jugador";
+            case "puntuacio": return "Puntuación";
+            case "ranking_titol": return "TOP 10 RANKING";
+            case "tornar_jugar": return "¿Quieres volver a jugar?";
+            default: return clau;
+            }
+        default: // Idioma per defecte: English (s'executa si no és ni CAT ni ES)
+            switch (clau) {
+            case "titol_menu": return "RETRO TENNIS";
+            case "regles": return "Rules: Move the paddle to prevent the ball from falling.";
+            case "nivell": return "LEVEL: ";
+            case "boto_acceptar": return "START";
+            case "nom_usuari": return "Enter your name:";
+            case "error_nom": return "You must enter a name!";
+            case "controles": return "CONTROLS";
+            case "info_controles": return "Arrows or Mouse to move the paddle.";
+            case "cambiar_idioma": return "CHANGE LANGUAGE";
+            case "sortir": return "EXIT";
+            case "guia_menu": return "ARROWS to navigate, ENTER to select";
+            case "game_over_titol": return "GAME OVER"; // Claus afegides per al rànquing
+            case "jugador": return "Player";
+            case "puntuacio": return "Score";
+            case "ranking_titol": return "TOP 10 RANKING";
+            case "tornar_jugar": return "Do you want to play again?";
+            default: return clau;
+            }
+        }
+	}
+}
