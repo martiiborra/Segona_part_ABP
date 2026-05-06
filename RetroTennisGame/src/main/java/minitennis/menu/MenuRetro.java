@@ -10,6 +10,8 @@ import minitennis.utils.Utils;
 import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import Data.GameData;
+
 
 /**
  * Definició de la classe MenuRetro.

@@ -153,5 +153,13 @@ public class Obstacle {
     		//Objecte Rectangle.
         return new Rectangle(x, y, WIDTH, HEIGHT);
     }
+    
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
+    }
 }
 

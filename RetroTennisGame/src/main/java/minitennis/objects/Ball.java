@@ -91,6 +91,39 @@ public class Ball {
 	public double getSpeed() {
 		return speed;
 	}
+	// POSICIÓN
+	public int getX() {
+	    return x;
+	}
+
+	public void setX(double x) {
+	    this.x = (int) x;
+	}
+
+	public int getY() {
+	    return y;
+	}
+
+	public void setY(double y) {
+	    this.y = (int) y;
+	}
+
+	// DIRECCIÓN
+	public int getDx() {
+	    return xVel;
+	}
+
+	public void setDx(double dx) {
+	    this.xVel = (int) dx;
+	}
+
+	public int getDy() {
+	    return yVel;
+	}
+
+	public void setDy(double dy) {
+	    this.yVel = (int) dy;
+	}
 	
 	/**
 	 * Mètode que calcula el moviment i gestiona les col·lisions amb parets, raqueta

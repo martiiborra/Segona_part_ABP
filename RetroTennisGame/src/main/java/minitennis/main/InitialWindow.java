@@ -8,6 +8,8 @@ import javax.swing.JTextField;
 import minitennis.language.ControlLanguage;
 import minitennis.language.LanguageSelectionMenu;
 import minitennis.utils.Utils;
+import javax.swing.SwingUtilities;
+
 
 /**
  * Classe InitialWindow. Aquesta classe gestiona la configuració prèvia a
@@ -62,7 +64,7 @@ public class InitialWindow {
 	 */
 	private void llançarJoc(String nom, int nivell, String language) {
 		// Instancia de la classe principal del motor del joc
-		Game game = new Game(nom, nivell, language);
+		Game game = new Game(nom, "", nom, nivell, language, 0);
 		// Instancia del contenidor de finestra
 		JFrame frame = new JFrame("Retro Tenis - " + nom);
 		// Addició de l'objecte 'game' (panell del joc)
@@ -80,6 +82,8 @@ public class InitialWindow {
 		SwingUtilities.invokeLater(() -> {
 		    game.requestFocusInWindow();
 		});
+		
+		
 
 		
 		new Thread(() -> {

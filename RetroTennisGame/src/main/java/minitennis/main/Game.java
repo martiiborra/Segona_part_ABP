@@ -26,8 +26,12 @@ import minitennis.objects.Racquet;
 import minitennis.sound.Sound;
 import minitennis.utils.Utils;
 import minitennis.language.ControlLanguage;
+import java.io.ObjectInputStream;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.ObjectOutputStream;
+import Data.GameData;
+import Data.GameData.BallState;
 
 
 /**
@@ -198,24 +202,6 @@ public class Game extends JPanel {
 		setFocusable(true);
 		
 
-		public void addNotify() {
-		    super.addNotify();
-		    
-		    
-		getInputMap(WHEN_IN_FOCUSED_WINDOW).put(
-		        javax.swing.KeyStroke.getKeyStroke("P"),
-		        "pauseGame"
-		);
-
-		getActionMap().put("pauseGame", new javax.swing.AbstractAction() {
-		    @Override
-		    public void actionPerformed(java.awt.event.ActionEvent e) {
-		    	System.out.println("P FUNCIONA");
-		        togglePause();
-		    }
-		});
-		
-		}
 		
 		setRequestFocusEnabled(true);
 		/*
@@ -256,6 +242,26 @@ public class Game extends JPanel {
 		SwingUtilities.invokeLater(() -> requestFocusInWindow());
 
 	}
+	
+	public void addNotify() {
+	    super.addNotify();
+	    
+	    
+	getInputMap(WHEN_IN_FOCUSED_WINDOW).put(
+	        javax.swing.KeyStroke.getKeyStroke("P"),
+	        "pauseGame"
+	);
+
+	getActionMap().put("pauseGame", new javax.swing.AbstractAction() {
+	    @Override
+	    public void actionPerformed(java.awt.event.ActionEvent e) {
+	    	System.out.println("P FUNCIONA");
+	        togglePause();
+	    }
+	});
+	
+	}
+	
 	
 	public Game(GameData data, String language) {
 
@@ -873,7 +879,7 @@ public class Game extends JPanel {
 
 	    sonido.stopFondo();
 
-	    int opcion = JOptionPane.showConfirmDialog(
+	    int opcion = JOptionPane.showOptionDialog(
 	            this,
 	            "joc en pausa ¿Vols guardar la partida?",
 	            "PAUSA",
@@ -907,6 +913,8 @@ public class Game extends JPanel {
 
 	    sonido.playFondo();
 	}
+	
+	
 	
 
 }
