@@ -2,6 +2,7 @@ package Data;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.ArrayList;
 
 public class GameData implements Serializable {
 
@@ -19,14 +20,20 @@ public class GameData implements Serializable {
 
     public int puntuacionJugador1;
     public int puntuacionJugador2;
-}
 
 
-class BallState implements Serializable {
+    public int racquetX;
+    public ArrayList<BallState> balls;
+    public ArrayList<Integer> obstacleX;
+    public ArrayList<Integer> obstacleY;
 
-    public double x;
-    public double y;
-    public double speed;
-    public double directionX;
-    public double directionY;
+    public static class BallState implements Serializable {
+        private static final long serialVersionUID = 1L;
+
+        public double x;
+        public double y;
+        public double speed;
+        public double directionX;
+        public double directionY;
+    }
 }

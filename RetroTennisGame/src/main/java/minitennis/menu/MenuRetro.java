@@ -2,7 +2,6 @@ package minitennis.menu;
 
 import javax.swing.*;
 
-import Data.GameData;
 import minitennis.language.ControlLanguage;
 import minitennis.language.LanguageSelectionMenu;
 import minitennis.main.Game;
@@ -11,6 +10,8 @@ import minitennis.utils.Utils;
 import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import Data.GameData;
+
 
 /**
  * Definició de la classe MenuRetro.
