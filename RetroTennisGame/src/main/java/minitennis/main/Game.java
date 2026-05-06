@@ -32,6 +32,8 @@ import java.io.FileOutputStream;
 import java.io.ObjectOutputStream;
 import Data.GameData;
 import Data.GameData.BallState;
+import javax.swing.JComponent;
+import javax.swing.KeyStroke;
 
 
 /**
@@ -201,6 +203,19 @@ public class Game extends JPanel {
 		// Permet rebre focus per al teclat
 		setFocusable(true);
 		
+		getInputMap(WHEN_IN_FOCUSED_WINDOW).put(
+		        javax.swing.KeyStroke.getKeyStroke("P"),
+		        "pauseGame"
+		);
+
+		getActionMap().put("pauseGame", new javax.swing.AbstractAction() {
+		    @Override
+		    public void actionPerformed(java.awt.event.ActionEvent e) {
+		    	System.out.println("P FUNCIONA");
+		        togglePause();
+		    }
+		});
+		
 
 		
 		setRequestFocusEnabled(true);
@@ -247,18 +262,6 @@ public class Game extends JPanel {
 	    super.addNotify();
 	    
 	    
-	getInputMap(WHEN_IN_FOCUSED_WINDOW).put(
-	        javax.swing.KeyStroke.getKeyStroke("P"),
-	        "pauseGame"
-	);
-
-	getActionMap().put("pauseGame", new javax.swing.AbstractAction() {
-	    @Override
-	    public void actionPerformed(java.awt.event.ActionEvent e) {
-	    	System.out.println("P FUNCIONA");
-	        togglePause();
-	    }
-	});
 	
 	}
 	
@@ -913,6 +916,8 @@ public class Game extends JPanel {
 
 	    sonido.playFondo();
 	}
+	
+	
 	
 	
 	

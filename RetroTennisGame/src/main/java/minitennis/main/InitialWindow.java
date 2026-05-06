@@ -9,6 +9,7 @@ import minitennis.language.ControlLanguage;
 import minitennis.language.LanguageSelectionMenu;
 import minitennis.utils.Utils;
 import javax.swing.SwingUtilities;
+import javax.swing.Timer;
 
 
 /**
@@ -23,6 +24,8 @@ import javax.swing.SwingUtilities;
 public class InitialWindow {
 	// Declaració i inicialització d'atribut de la classe controlLang
 	private ControlLanguage controlLang;
+	
+	private boolean running = true;
 
 	/**
 	 * Constructor de la classe. Instancia l'objecte ControlLanguage per gestionar
@@ -79,15 +82,21 @@ public class InitialWindow {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		//HE HECHO YO
-		SwingUtilities.invokeLater(() -> {
-		    game.requestFocusInWindow();
+		SwingUtilities.invokeLater(game::requestFocusInWindow);
+
+		// GAME LOOP
+		Timer timer = new Timer(10, e -> {
+		    game.move();
+		    game.repaint();
 		});
+		timer.start();
+		game.setGameTimer(timer);
 		
 		
 
 		
 		new Thread(() -> {
-			while (true) {
+			while (running) {
 				// Actualització de la lògica de posicions
 				game.move();
 
@@ -105,5 +114,13 @@ public class InitialWindow {
 				}
 			}
 		}).start(); // Arrencada del fil
+	}
+	
+	public void stopGameLoop() {
+	    running = false;
+	}
+
+	public void startGameLoop() {
+	    running = true;
 	}
 }
