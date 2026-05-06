@@ -2,6 +2,7 @@ package minitennis.menu;
 
 import javax.swing.*;
 
+import Data.GameData;
 import minitennis.language.ControlLanguage;
 import minitennis.language.LanguageSelectionMenu;
 import minitennis.main.Game;

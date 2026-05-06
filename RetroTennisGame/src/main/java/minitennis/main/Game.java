@@ -14,6 +14,9 @@ import java.util.List;
 import java.util.Random;
 import javax.swing.ImageIcon;
 import javax.swing.Timer;
+
+import Data.GameData;
+
 import java.awt.Image;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
