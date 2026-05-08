@@ -32,6 +32,7 @@ import java.io.FileOutputStream;
 import java.io.ObjectOutputStream;
 import Data.GameData;
 import Data.GameData.BallState;
+import javax.swing.KeyStroke;
 
 
 /**
@@ -145,29 +146,8 @@ public class Game extends JPanel {
 		//Afegim a la llista la bola
 		balls.add(primeraBola);
 
-		// Estructura de control d'errors TRY-CATCH, gestiona el fons del videojoc
-		try {
-
-			/*
-			 * Localitza, carrega i extreu la imatge del fitxer de fons per a la seva
-			 * posterior renderització en el panell del joc.
-			 */
-			fons = new ImageIcon(getClass().getResource("/Imatge/fondovideojuego.jpg")).getImage();
-
-			// Càrrega de l'array de fons
-			fondos[0] = new ImageIcon(getClass().getResource("/Imatge/fondovideojuego.jpg")).getImage();
-			fondos[1] = new ImageIcon(getClass().getResource("/Imatge/fondovideojuego2.jpg")).getImage();
-			fondos[2] = new ImageIcon(getClass().getResource("/Imatge/fondovideojuego3.jpg")).getImage();
-			fondos[3] = new ImageIcon(getClass().getResource("/Imatge/fondovideojuego4.jpg")).getImage();
-			fondos[4] = new ImageIcon(getClass().getResource("/Imatge/fondovideojuego5.jpg")).getImage();
-			fondos[5] = new ImageIcon(getClass().getResource("/Imatge/fondovideojuego6.jpg")).getImage();
-
-		} catch (Exception e) {
-
-			// Si es produiex alguna mena d'excepció la capturem i mostrem el missatge
-			System.out.println("No se pudo cargar la imagen de fondo.");
-
-		}
+		// Cridem al metode que carrega el fons
+		cargarFondos();
 
 		// Actualitzem els obstacles segons el nivell
 		actualitzarObstacles(Game.level);
@@ -271,6 +251,8 @@ public class Game extends JPanel {
 
 		this.language = language;
 
+		cargarFondos();
+		
 	    if (data != null) {
 	        cargarEstado(data);
 	    } else {
@@ -280,9 +262,76 @@ public class Game extends JPanel {
 
 	        actualitzarObstacles(level);
 	    }
+	    
+	 // CONTROLES TECLADO
+	    addKeyListener(new KeyAdapter() {
+
+	        @Override
+	        public void keyPressed(KeyEvent e) {
+
+	            racquet.keyPressed(e);
+
+	        }
+
+	        @Override
+	        public void keyReleased(KeyEvent e) {
+
+	            racquet.keyReleased(e);
+
+	        }
+
+	    });
+
+	    // FOCO
+	    setFocusable(true);
+
+	    setRequestFocusEnabled(true);
+
+	    // TECLA P
+	    getInputMap(WHEN_IN_FOCUSED_WINDOW).put(
+	            KeyStroke.getKeyStroke("P"),
+	            "pauseGame"
+	    );
+
+	    getActionMap().put("pauseGame", new javax.swing.AbstractAction() {
+
+	        @Override
+	        public void actionPerformed(java.awt.event.ActionEvent e) {
+
+	            togglePause();
+
+	        }
+
+	    });
+
+	    // CLICK RATÓN
+	    addMouseListener(new java.awt.event.MouseAdapter() {
+
+	        @Override
+	        public void mousePressed(java.awt.event.MouseEvent e) {
+
+	            requestFocusInWindow();
+
+	        }
+
+	    });
+
+	    // MOVIMIENTO RATÓN
+	    addMouseMotionListener(new MouseMotionAdapter() {
+
+	        @Override
+	        public void mouseMoved(MouseEvent e) {
+
+	            racquet.setMouse(e.getX());
+
+	        }
+
+	    });
 
 	    setFocusable(true);
 	    sonido.playFondo();
+	    
+	    
 	}
 
 	/**
@@ -911,6 +960,28 @@ public class Game extends JPanel {
 
 	    sonido.playFondo();
 	}
+	
+	private void cargarFondos() {
+
+	    try {
+
+	        fons = new ImageIcon(getClass().getResource("/Imatge/fondovideojuego.jpg")).getImage();
+
+	        fondos[0] = new ImageIcon(getClass().getResource("/Imatge/fondovideojuego.jpg")).getImage();
+	        fondos[1] = new ImageIcon(getClass().getResource("/Imatge/fondovideojuego2.jpg")).getImage();
+	        fondos[2] = new ImageIcon(getClass().getResource("/Imatge/fondovideojuego3.jpg")).getImage();
+	        fondos[3] = new ImageIcon(getClass().getResource("/Imatge/fondovideojuego4.jpg")).getImage();
+	        fondos[4] = new ImageIcon(getClass().getResource("/Imatge/fondovideojuego5.jpg")).getImage();
+	        fondos[5] = new ImageIcon(getClass().getResource("/Imatge/fondovideojuego6.jpg")).getImage();
+
+	    } catch (Exception e) {
+
+	        System.out.println("No se pudo cargar la imagen de fondo.");
+
+	    }
+	}
+	
+	
 	
 	
 	

@@ -75,7 +75,14 @@ public class NombreUsuarioMenu extends JPanel {
             		//HE HECHO CAMBIOS
             	    if (nombre.length() > 0) {
 
-            	        if (fase == 1) {
+            	    	
+            	    	if (modoJuego == 0) {
+            	    		jugador1 = nombre.toString();
+            	    		jugador2 = "";
+            	    		nickname = jugador1;
+            	    		confirmarYEmpezar();
+            	    	}
+            	    	else if (fase == 1) {
             	            jugador1 = nombre.toString();
             	            nombre.setLength(0); // limpiar
             	            fase = 2;
@@ -223,13 +230,21 @@ public class NombreUsuarioMenu extends JPanel {
         //DEPENEN DE LA FASE MOSTRA UN TEXT O ALTRE
         String texto = "";
 
-        if (fase == 1) {
-            texto = "Jugador 1";
-        } else if (fase == 2) {
-            texto = "Jugador 2";
-        } else if (fase == 3) {
-            texto = "Nickname";
+        if (modoJuego == 0) {
+
+            texto = "Nombre jugador";
+
+        } else {
+
+            if (fase == 1) {
+                texto = "Jugador 1";
+            } else if (fase == 2) {
+                texto = "Jugador 2";
+            } else if (fase == 3) {
+                texto = "Nickname";
+            }
         }
+        
 
         g2.drawString(texto, 25, 100);
 
