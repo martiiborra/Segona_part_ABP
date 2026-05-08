@@ -19,7 +19,8 @@ import Data.GameData;
  * La seva funció es escollir una de les opcions donades com (jugar, escollir nivell,
  * canviar el idioma i sortir del programa)
  * 
- * @author André Medinas, Candela Cabello, Daner Coria, Izan Perez i Adrià Chenovart
+ * @author Primera part Grup 4
+ * @author Segona part Grup 1
  */
 public class MenuRetro extends JPanel {
 
@@ -31,18 +32,15 @@ public class MenuRetro extends JPanel {
     private String nombre = "";
     private Image fondo;
     
-    // VARIABLE PER CAMBIAR MODE DE JOC
-    private int modoJuego = 0; 
-    // 0 = NORMAL
-    // 1 = MULTIJUGADOR ASINCRON
-    // 2 = MULTIJUGADOR SINCRONIC
+    // Variable per cambiar de mode de joc
+    private int modoJuego = 0; // 0 = Normal, 1 = Asincron
     
     //Declaració i incialització de finals
     private static final int OPCIO_JUGAR = 0; 
     private static final int OPCIO_CONTROLS = 3;
     private static final int OPCIO_CANVIAR_IDIOMA = 4;
     private static final int OPCIO_SORTIR = 5;
-    //NOVA OPCIO
+    // Posicio de mode al menu
     private static final int OPCIO_MODE = 1;
 
     /**
@@ -245,11 +243,14 @@ public class MenuRetro extends JPanel {
         game.requestFocusInWindow();
     }
     
-    //METODE HELPER
+    /**
+     * Metode que agafa el valor numeric del mode de joc y ho transforma a text
+     * per poder se llegible al menu del joc
+     * @return
+     */
     private String getModeText() {
         switch (modoJuego) {
             case 1: return "MULTI ASYNC";
-            case 2: return "MULTI SYNC";
             default: return "SINGLE";
         }
     }
@@ -307,4 +308,5 @@ public class MenuRetro extends JPanel {
         // Afegim el contingut de controlLang i donem les posicions
         g2.drawString(controlLang.get("guia_menu"), 15, 370);
     }
+    
 }

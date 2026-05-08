@@ -7,7 +7,8 @@ import minitennis.utils.Utils;
  * Aquesta classe actua com donar una definició per cada opció escollida.
  * La seva funció és depenent de l'opció d'idioma escollida (àngles, català i castellà)
  * doncs retorna les seves definicions
- * * @autor André Medinas, Candela Cabello, Daner Coria, Izan Perez i Adrià Chenovart
+ * @autor Primera part Grup 4
+ * @author Segona part Grup 1
  */
 public class ControlLanguage {
 	// Defineixen els identificadors d'idioma suportats per l'aplicació

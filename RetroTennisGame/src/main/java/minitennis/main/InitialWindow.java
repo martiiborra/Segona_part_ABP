@@ -1,10 +1,7 @@
 package minitennis.main;
 
-import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
-import javax.swing.JTextField;
-
 import minitennis.language.ControlLanguage;
 import minitennis.language.LanguageSelectionMenu;
 import minitennis.utils.Utils;
@@ -18,15 +15,12 @@ import Data.GameData;
  * l'execució del joc (Input de l'usuari). Actua com a pont entre la lògica de
  * configuració de llenguatge i la instanciació del joc.
  * 
- * @author André Medinas, Candela Cabello, Daner Coria, Izan Perez i Adrià
- * Chenovart
- * 
+ * @author Primera part Grup 4
+ * @author Segona part Grup 1
  */
 public class InitialWindow {
 	// Declaració i inicialització d'atribut de la classe controlLang
 	private ControlLanguage controlLang;
-	
-	private boolean running = true;
 
 	/**
 	 * Constructor de la classe. Instancia l'objecte ControlLanguage per gestionar
@@ -57,7 +51,7 @@ public class InitialWindow {
 
 		//Demanem el focus perquè el teclat funcioni al moment
 		selectionMenu.requestFocusInWindow();
-		
+		// Al iniciar el programa pregntem a l'usuari que vol fer
 		int opcion = JOptionPane.showOptionDialog(
 		        frame,
 		        "¿Qué quieres hacer?",
@@ -65,33 +59,23 @@ public class InitialWindow {
 		        JOptionPane.DEFAULT_OPTION,
 		        JOptionPane.INFORMATION_MESSAGE,
 		        null,
+		        // Si vol una nova partida o carregar una nova partida
 		        new String[]{"Nueva partida", "Cargar partida"},
 		        "Nueva partida"
 		    );
-		
+		// Si l'usuari vol carregar una partida
 	    if (opcion == 1) {
-
+	    	//Intenta carregar les dades de una partida guardada
 	        GameData data = Game.cargarPartida();
-
+	        //Si la partida s'ha guardat correctament
 	        if (data != null) {
-
-	            Game game = new Game(data, "ES");
-
-	            JFrame gameFrame = new JFrame("Retro Tennis - LOAD");
-	            gameFrame.add(game);
-	            gameFrame.setSize(Utils.WINDOW_WIDTH, Utils.WINDOW_HEIGHT);
-	            gameFrame.setVisible(true);
-	            gameFrame.setLocationRelativeTo(null);
-	            gameFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-	            Timer timer = new Timer(10, e -> {
-	                game.move();
-	                game.repaint();
-	            });
-
-	            timer.start();
-	            game.setGameTimer(timer);
-
+	        	//Creem una nou game utilitzant les dades guardades
+	        	Game game = new Game(data, "ES");
+	        	// Crea una nova finestra per mostrar el joc carregat
+	        	JFrame gameFrame = new JFrame("Retro Tennis - LOAD");
+	        	// Inicialitzem el joc
+	        	iniciarJuego(game, gameFrame);
+	        	// tanquem la finestra del menu principal
 	            frame.dispose();
 	        }
 	    }
@@ -121,24 +105,44 @@ public class InitialWindow {
 		// Tancar l'aplicació en tancar la finestra
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
-		//HE HECHO YO
+		// El component del joc rep el focus per teclat
 		SwingUtilities.invokeLater(game::requestFocusInWindow);
 
-		// GAME LOOP
+		// Bucle principal del joc
 		Timer timer = new Timer(10, e -> {
-		    game.move();
-		    game.repaint();
+		    game.move(); // Actualitza la logica del joc
+		    game.repaint(); // Redibuixa la estada actual del joc en pantalla
 		});
-		timer.start();
+		timer.start(); // Inicia el bucle del joc
+		// Desa la referencia del timer dins del joc
 		game.setGameTimer(timer);
 		
-	}
-	
-	public void stopGameLoop() {
-	    running = false;
-	}
-
-	public void startGameLoop() {
-	    running = true;
+	}	
+	/**
+	 * Metode que inicialitza i arrenca la finestra del joc juntament amb el seu bucle principal
+	 * d'encarrega de configurar Jframe, afegir el panel del joc i iniciar el timer
+	 * @param game
+	 * @param frame
+	 */
+	private void iniciarJuego(Game game, JFrame frame) {
+		// Afegim panell del joc a la finestra
+	    frame.add(game);
+	    // Definim la mida de la finestra utilitzant constants del joc
+	    frame.setSize(Utils.WINDOW_WIDTH, Utils.WINDOW_HEIGHT);
+	    // Fem visible la finestra
+	    frame.setVisible(true);
+	    // Centrem la finestra a la pantalla
+	    frame.setLocationRelativeTo(null);
+	    // Definim que en tencar la finestra s'aturi el joc
+	    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	    // Creem el timer del joc
+	    Timer timer = new Timer(10, e -> {
+	        game.move();
+	        game.repaint();
+	    });
+	    // Iniciem bucle del joc
+	    timer.start();
+	    // Guarden la referencia del timer dins del joc
+	    game.setGameTimer(timer);
 	}
 }

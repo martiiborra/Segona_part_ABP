@@ -13,7 +13,8 @@ import java.awt.event.KeyEvent;
  * Aquesta classe actua com fineestra per seleccionar el idioma
  * La seva funció es mostrar a la finestra les 3 opcions d'idioma oferides
  * 
- * @autor André Medinas, Candela Cabello, Daner Coria, Izan Perez i Adrià Chenovart
+ * @autor Primera part Grup 4
+ * @author Segona part Grup 1
  */
 public class LanguageSelectionMenu extends JPanel {
 	

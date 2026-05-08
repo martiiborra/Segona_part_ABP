@@ -6,7 +6,8 @@ import java.sql.*;
  * Aquesta classe actua com connector del joc amb la base de dades.
  * La seva funció és connectar la Base de Dades MySQL al Eclipse, emmagatzemant les puntuacions	
  * 
- * @autor André Medinas, Candela Cabello, Daner Coria, Izan Perez i Adrià Chenovart
+ * @autor Primera part Grup 4
+ * @author Segona part Grup 1
  */
 public class Connexio {
 	// Objecte que manté la connexió activa amb la BD

@@ -17,7 +17,8 @@ import java.awt.event.KeyEvent;
  * La seva funció es rebre el nombre afegit amb opció de continuar per començar a jugar
  * i l'altre es per tornar al menu principal
  * 
- * @autor André Medinas, Candela Cabello, Daner Coria, Izan Perez i Adrià Chenovart
+ * @autor Primera part Grup 4
+ * @author Segona part Grup 1
  */
 public class NombreUsuarioMenu extends JPanel {
 
@@ -27,25 +28,25 @@ public class NombreUsuarioMenu extends JPanel {
     private StringBuilder nombre = new StringBuilder();
     private Image fondo;
     
-    //VARIABLE PER EL MODE DE JOC
+    //Variable per al mode de joc
     private int modoJuego;
     
-    //VARIABLES DE JUGADORS I NICKNAME
+    //Variable que enmmagatzema els noms dels jugadors i nickname
     private String jugador1;
     private String jugador2;
     private String nickname;
     
-    // FASES PER DEMANAR NOMS I NICKNAME
+    // Fases per demanar noms
     private int fase = 1; // 1 = jugador1, 2 = jugador2, 3 = nickname
     
     /**
      * Constructor que rep l'idioma i el nivell seleccionat
-     * 
      * @param controlLang el idioma seleccionat
      * @param nivel el nivel seleccionat
+     * @param modoJuego mode de joc seleccionat	
      */
     
-    //AFEGIM MODO JUEGO
+    //Afegim mode de joc com a parametre per el constructor
     public NombreUsuarioMenu(ControlLanguage controlLang, int nivel, int modoJuego) {
     	// Els parametres seleccionats canvien els valors
     	 this.controlLang = controlLang;
@@ -72,27 +73,33 @@ public class NombreUsuarioMenu extends JPanel {
             public void keyPressed(KeyEvent e) {
             	// Comprova si la tecla polsada es Enter
             	if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-            		//HE HECHO CAMBIOS
+            		//Si el nom no es buit
             	    if (nombre.length() > 0) {
-
-            	    	
+            	    	//Si el mode de joc Normal
             	    	if (modoJuego == 0) {
+            	    		// Demanem el nom de un sol jugador i asignem el nickname al mateix valor
             	    		jugador1 = nombre.toString();
             	    		jugador2 = "";
             	    		nickname = jugador1;
             	    		confirmarYEmpezar();
             	    	}
+            	    	// Si es asincron, a la fase 1
             	    	else if (fase == 1) {
+            	    		// preguntem per el nom de jugador 1
             	            jugador1 = nombre.toString();
-            	            nombre.setLength(0); // limpiar
+            	            nombre.setLength(0);
+            	            // Asignem la fase a 2
             	            fase = 2;
 
-            	        } else if (fase == 2) {
+            	        } else if (fase == 2) { // si la fase es 2
+            	        	// Demanem nom de jugador 2
             	            jugador2 = nombre.toString();
             	            nombre.setLength(0);
+            	            // Asignem la fase a 3
             	            fase = 3;
 
-            	        } else if (fase == 3) {
+            	        } else if (fase == 3) { // Si la fase es 3
+            	        	// Preguntem per el nickname
             	            nickname = nombre.toString();
             	            confirmarYEmpezar();
             	        }
@@ -227,15 +234,17 @@ public class NombreUsuarioMenu extends JPanel {
         // Afegim la seva font i el tamany
         g2.setFont(new Font("Monospaced", Font.BOLD, 20));
         // I escrivim el text traduit
-        //DEPENEN DE LA FASE MOSTRA UN TEXT O ALTRE
+        // Depen del mode de joc mostrem un text diferent
         String texto = "";
 
+        // Si el mode de joc es Normal
         if (modoJuego == 0) {
-
+        	// Mostrem nom jugador i l'usuari posara el seu nom
             texto = "Nombre jugador";
 
-        } else {
-
+        } else { // Si el mode de joc es asincron
+        	
+        	// Mostrem jugador1, jugador2 i nickname per fases i els jugadors hauran d'omplir
             if (fase == 1) {
                 texto = "Jugador 1";
             } else if (fase == 2) {
