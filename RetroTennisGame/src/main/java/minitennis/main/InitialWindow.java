@@ -10,6 +10,7 @@ import minitennis.language.LanguageSelectionMenu;
 import minitennis.utils.Utils;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
+import Data.GameData;
 
 
 /**
@@ -56,7 +57,46 @@ public class InitialWindow {
 
 		//Demanem el focus perquè el teclat funcioni al moment
 		selectionMenu.requestFocusInWindow();
+		
+		int opcion = JOptionPane.showOptionDialog(
+		        frame,
+		        "¿Qué quieres hacer?",
+		        "Retro Tennis",
+		        JOptionPane.DEFAULT_OPTION,
+		        JOptionPane.INFORMATION_MESSAGE,
+		        null,
+		        new String[]{"Nueva partida", "Cargar partida"},
+		        "Nueva partida"
+		    );
+		
+	    if (opcion == 1) {
+
+	        GameData data = Game.cargarPartida();
+
+	        if (data != null) {
+
+	            Game game = new Game(data, "ES");
+
+	            JFrame gameFrame = new JFrame("Retro Tennis - LOAD");
+	            gameFrame.add(game);
+	            gameFrame.setSize(Utils.WINDOW_WIDTH, Utils.WINDOW_HEIGHT);
+	            gameFrame.setVisible(true);
+	            gameFrame.setLocationRelativeTo(null);
+	            gameFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+	            Timer timer = new Timer(10, e -> {
+	                game.move();
+	                game.repaint();
+	            });
+
+	            timer.start();
+	            game.setGameTimer(timer);
+
+	            frame.dispose();
+	        }
+	    }
 	}
+	
 
 	/**
 	 * Mètode privat per a la inicialització del contenidor principal i el bucle del
@@ -92,28 +132,6 @@ public class InitialWindow {
 		timer.start();
 		game.setGameTimer(timer);
 		
-		
-
-		
-		new Thread(() -> {
-			while (running) {
-				// Actualització de la lògica de posicions
-				game.move();
-
-				//Invocació del renderitzat gràfic
-				game.repaint();
-
-				// Control del temps (Thread.sleep)
-				try {
-					// Pausa de 10 mil·lisegons
-					Thread.sleep(10); 
-				} catch (InterruptedException e) {
-					// Si el fil s'interromp, sortim del bucle
-					e.printStackTrace();
-					break;
-				}
-			}
-		}).start(); // Arrencada del fil
 	}
 	
 	public void stopGameLoop() {

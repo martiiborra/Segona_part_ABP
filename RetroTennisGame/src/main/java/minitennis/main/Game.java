@@ -32,8 +32,6 @@ import java.io.FileOutputStream;
 import java.io.ObjectOutputStream;
 import Data.GameData;
 import Data.GameData.BallState;
-import javax.swing.JComponent;
-import javax.swing.KeyStroke;
 
 
 /**
@@ -85,34 +83,38 @@ public class Game extends JPanel {
 	// Variable per guardar la referència del Timer del joc perquè es pugui detenir
 	private Timer gameTimer = null;
 	
-	//VARIABLE DE MODE DE JOC
+	//Declaracio de la variable per el mode de joc
 	private int modoJuego;
 	
-	//VARIABLE DE JUGADORACTUAL
+	//Variable que indica el jugador que esta jugan en aquell moment
 	private int jugadorActual = 1;
 
-	//VARIABLES DE PUNTUACIONS
+	//Variables que emmagatzemen les puntuacions dels 2 jugadors una vegada termina la partida
 	private int puntuacionJugador1 = 0;
 	private int puntuacionJugador2 = 0;
 	
-	//VARIABLE PER REINICIAR DESDE EL NIVEL SELECCIONAT
+	//Variable per reiniciar la partida de jugador 2 des de el nivell seleccionat a menu
 	private int selectedLevel;
 	
-	
+	//Variables que emmagatzemen informacio dels jugadors
 	private String jugador1;
 	private String jugador2;
 	private String nickname;
 	
-	//VARIABLE PER PAUSAR PARTIDA
+	//Variable que cambia a true cuan es pausa la partida
 	private boolean paused = false;
 
 	/**
 	 * Constructor del joc. Inicialitza components i escoltadors d'entrada.
-	 * @param playerName,    nom del jugador
+	 * @param jugador1,    nom de jugador1
+	 * @param jugador2,    nom de jugador2
+	 * @param nickname,    nom dels dos jugadors com a grup
 	 * @param selectedLevel, nivell inicial seleccionat
+	 * @param language,    llenguatge seleccionat (angles, catala o castella)
+	 * @param modoJuego,   mode de joc seleccionat (sigle o asincron)
 	 * */
 	
-	//AFEGIM MODE JOC I AFEGIM ELS 2 JUGADORS I NICKNAME
+	//Afegim al constructor les variables modoJuego, jugador1, jugador2 i nickname
 	public Game(String jugador1, String jugador2, String nickname, int selectedLevel, String language, int modoJuego) {
 
 		// IMPORTANT: Reiniciem l'estat de control per si venim d'una partida anterior
@@ -202,7 +204,10 @@ public class Game extends JPanel {
 		
 		// Permet rebre focus per al teclat
 		setFocusable(true);
-		
+		/*
+		 * Fa que una vegada comença el joc, si es prem la tecla "P" el joc es posara 
+		 * en pausa
+		 */
 		getInputMap(WHEN_IN_FOCUSED_WINDOW).put(
 		        javax.swing.KeyStroke.getKeyStroke("P"),
 		        "pauseGame"
@@ -211,7 +216,6 @@ public class Game extends JPanel {
 		getActionMap().put("pauseGame", new javax.swing.AbstractAction() {
 		    @Override
 		    public void actionPerformed(java.awt.event.ActionEvent e) {
-		    	System.out.println("P FUNCIONA");
 		        togglePause();
 		    }
 		});
@@ -260,57 +264,25 @@ public class Game extends JPanel {
 	
 	public void addNotify() {
 	    super.addNotify();
-	    
-	    
-	
 	}
 	
 	
 	public Game(GameData data, String language) {
 
-	    this.jugador1 = data.jugador1;
-	    this.jugador2 = data.jugador2;
-	    this.nickname = data.nickname;
+		this.language = language;
 
-	    this.modoJuego = data.modoJuego;
-	    this.jugadorActual = data.jugadorActual;
-
-	    this.puntuacionJugador1 = data.puntuacionJugador1;
-	    this.puntuacionJugador2 = data.puntuacionJugador2;
-
-	    this.score = data.score;
-	    Game.level = data.level;
-
-	    this.language = language;
-	    
-	    this.selectedLevel = data.level;
-	    Game.level = data.level;
-
-	    this.modoJuego = data.modoJuego;
-	    this.jugadorActual = data.jugadorActual;
-
-	    this.puntuacionJugador1 = data.puntuacionJugador1;
-	    this.puntuacionJugador2 = data.puntuacionJugador2;
-
-	    this.jugador1 = data.jugador1;
-	    this.jugador2 = data.jugador2;
-	    this.nickname = data.nickname;
-	    this.playerName = data.nickname;
-
-	    // INITCIALITZEM TOT
-	    Ball b = new Ball(this);
-	    balls.add(b);
-
-	    actualitzarObstacles(level);
-	    setFocusable(true);
-	    sonido.playFondo();
-	    
-	    racquet = new Racquet(this);
-	    sonido.playFondo();
-	    
 	    if (data != null) {
 	        cargarEstado(data);
+	    } else {
+
+	        this.modoJuego = 0;
+	        this.jugadorActual = 1;
+
+	        actualitzarObstacles(level);
 	    }
+
+	    setFocusable(true);
+	    sonido.playFondo();
 	}
 
 	/**
@@ -592,9 +564,18 @@ public class Game extends JPanel {
 	                jugadorActual = 2;
 
 	                // REINICIA PARTIDA PER JUGADOR 2
+	                paused = false;
+	                
 	                resetGame();
 	                gameEnded = false;
+	                
+	                
+	                if (gameTimer != null) {
+	                    gameTimer.start();
+	                }
+	                
 	                return;
+	                
 
 	            } else {
 	                puntuacionJugador2 = (int) score;
@@ -747,9 +728,11 @@ public class Game extends JPanel {
 
 	        data.modoJuego = modoJuego;
 	        data.jugadorActual = jugadorActual;
-
+	        
 	        data.puntuacionJugador1 = puntuacionJugador1;
 	        data.puntuacionJugador2 = puntuacionJugador2;
+	        
+	        
 
 	        
 	        // GUARDAR RAQUETA
@@ -797,7 +780,10 @@ public class Game extends JPanel {
 	}
 	
 	
-	// METODO PARA CARGAR LA PARTIDA
+	/**
+	 * metode que carrega la partida guardada com partida.dat
+	 * @return data en cas de no trobar la partida null
+	 */
 	public static GameData cargarPartida() {
 	    try {
 	        ObjectInputStream ois = new ObjectInputStream(
@@ -814,26 +800,35 @@ public class Game extends JPanel {
 	    }
 	}
 	
+	/**
+	 * Metode que una vegada cargada la partida asignem tots els valors guardats
+	 * de la partida a les variables del joc
+	 * @param data
+	 */
 	private void cargarEstado(GameData data) {
 
+		//Nivell i puntuacio
 	    level = data.level;
 	    score = data.score;
 
+	    //Noms de jugadors
 	    jugador1 = data.jugador1;
 	    jugador2 = data.jugador2;
 	    nickname = data.nickname;
 
+	    //mode de joc i el jugador que estaba jugan en aquell moment
 	    modoJuego = data.modoJuego;
 	    jugadorActual = data.jugadorActual;
 
+	    //Les puntuacions finals de cada jugador
 	    puntuacionJugador1 = data.puntuacionJugador1;
 	    puntuacionJugador2 = data.puntuacionJugador2;
 
-	    // RAQUETA
+	    // Raqueta
 	    racquet = new Racquet(this);
 	    racquet.setX(data.racquetX);
 
-	    // BOLAS
+	    // Bola
 	    balls.clear();
 
 	    for (BallState bs : data.balls) {
@@ -850,7 +845,7 @@ public class Game extends JPanel {
 	        balls.add(b);
 	    }
 
-	    // OBSTÁCULOS
+	    // Obstacle
 	    obstacles.clear();
 
 	    for (int i = 0; i < data.obstacleX.size(); i++) {

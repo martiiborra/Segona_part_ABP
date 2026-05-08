@@ -84,7 +84,7 @@ public class MenuRetro extends JPanel {
                     case KeyEvent.VK_LEFT:
                     	//EL CAMBIEM LA OPCIO DE MODE AMB LA FLETXA ESQUERRA
                         if (seleccion == OPCIO_MODE) {
-                            modoJuego = (modoJuego - 1 + 3) % 3;
+                            modoJuego = (modoJuego - 1 + 2) % 2;
                         }  else if (seleccion == 2) { // NIVEL
                             nivel = Math.max(Utils.MIN_LEVELS, nivel - 1);
                         }
@@ -93,7 +93,7 @@ public class MenuRetro extends JPanel {
                     case KeyEvent.VK_RIGHT:
                     	// EL CAMBIEM LA OPCIO DE MODE AMB LA FLETXA ESQUERRA
                         if (seleccion == OPCIO_MODE) {
-                            modoJuego = (modoJuego + 1) % 3;
+                            modoJuego = (modoJuego + 1) % 2;
                         } else if (seleccion == 2) { // NIVEL
                             nivel++;
                         }

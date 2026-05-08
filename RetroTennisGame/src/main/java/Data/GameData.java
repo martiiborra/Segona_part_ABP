@@ -27,6 +27,13 @@ public class GameData implements Serializable {
     public ArrayList<Integer> obstacleX;
     public ArrayList<Integer> obstacleY;
 
+    public GameData() {
+        balls = new ArrayList<>();
+        obstacleX = new ArrayList<>();
+        obstacleY = new ArrayList<>();
+    }
+    
+    
     public static class BallState implements Serializable {
         private static final long serialVersionUID = 1L;
 
