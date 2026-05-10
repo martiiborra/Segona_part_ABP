@@ -1,14 +1,13 @@
 package minitennis.main;
 
-import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
-import javax.swing.JTextField;
-
 import minitennis.language.ControlLanguage;
 import minitennis.language.LanguageSelectionMenu;
 import minitennis.utils.Utils;
 import javax.swing.SwingUtilities;
+import javax.swing.Timer;
+import Data.GameData;
 
 
 /**
@@ -16,9 +15,8 @@ import javax.swing.SwingUtilities;
  * l'execució del joc (Input de l'usuari). Actua com a pont entre la lògica de
  * configuració de llenguatge i la instanciació del joc.
  * 
- * @author André Medinas, Candela Cabello, Daner Coria, Izan Perez i Adrià
- * Chenovart
- * 
+ * @author Primera part Grup 4
+ * @author Segona part Grup 1
  */
 public class InitialWindow {
 	// Declaració i inicialització d'atribut de la classe controlLang
@@ -53,7 +51,36 @@ public class InitialWindow {
 
 		//Demanem el focus perquè el teclat funcioni al moment
 		selectionMenu.requestFocusInWindow();
+		// Al iniciar el programa pregntem a l'usuari que vol fer
+		int opcion = JOptionPane.showOptionDialog(
+		        frame,
+		        "¿Qué quieres hacer?",
+		        "Retro Tennis",
+		        JOptionPane.DEFAULT_OPTION,
+		        JOptionPane.INFORMATION_MESSAGE,
+		        null,
+		        // Si vol una nova partida o carregar una nova partida
+		        new String[]{"Nueva partida", "Cargar partida"},
+		        "Nueva partida"
+		    );
+		// Si l'usuari vol carregar una partida
+	    if (opcion == 1) {
+	    	//Intenta carregar les dades de una partida guardada
+	        GameData data = Game.cargarPartida();
+	        //Si la partida s'ha guardat correctament
+	        if (data != null) {
+	        	//Creem una nou game utilitzant les dades guardades
+	        	Game game = new Game(data, "ES");
+	        	// Crea una nova finestra per mostrar el joc carregat
+	        	JFrame gameFrame = new JFrame("Retro Tennis - LOAD");
+	        	// Inicialitzem el joc
+	        	iniciarJuego(game, gameFrame);
+	        	// tanquem la finestra del menu principal
+	            frame.dispose();
+	        }
+	    }
 	}
+	
 
 	/**
 	 * Mètode privat per a la inicialització del contenidor principal i el bucle del
@@ -78,32 +105,44 @@ public class InitialWindow {
 		// Tancar l'aplicació en tancar la finestra
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
-		//HE HECHO YO
-		SwingUtilities.invokeLater(() -> {
-		    game.requestFocusInWindow();
+		// El component del joc rep el focus per teclat
+		SwingUtilities.invokeLater(game::requestFocusInWindow);
+
+		// Bucle principal del joc
+		Timer timer = new Timer(10, e -> {
+		    game.move(); // Actualitza la logica del joc
+		    game.repaint(); // Redibuixa la estada actual del joc en pantalla
 		});
+		timer.start(); // Inicia el bucle del joc
+		// Desa la referencia del timer dins del joc
+		game.setGameTimer(timer);
 		
-		
-
-		
-		new Thread(() -> {
-			while (true) {
-				// Actualització de la lògica de posicions
-				game.move();
-
-				//Invocació del renderitzat gràfic
-				game.repaint();
-
-				// Control del temps (Thread.sleep)
-				try {
-					// Pausa de 10 mil·lisegons
-					Thread.sleep(10); 
-				} catch (InterruptedException e) {
-					// Si el fil s'interromp, sortim del bucle
-					e.printStackTrace();
-					break;
-				}
-			}
-		}).start(); // Arrencada del fil
+	}	
+	/**
+	 * Metode que inicialitza i arrenca la finestra del joc juntament amb el seu bucle principal
+	 * d'encarrega de configurar Jframe, afegir el panel del joc i iniciar el timer
+	 * @param game
+	 * @param frame
+	 */
+	private void iniciarJuego(Game game, JFrame frame) {
+		// Afegim panell del joc a la finestra
+	    frame.add(game);
+	    // Definim la mida de la finestra utilitzant constants del joc
+	    frame.setSize(Utils.WINDOW_WIDTH, Utils.WINDOW_HEIGHT);
+	    // Fem visible la finestra
+	    frame.setVisible(true);
+	    // Centrem la finestra a la pantalla
+	    frame.setLocationRelativeTo(null);
+	    // Definim que en tencar la finestra s'aturi el joc
+	    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	    // Creem el timer del joc
+	    Timer timer = new Timer(10, e -> {
+	        game.move();
+	        game.repaint();
+	    });
+	    // Iniciem bucle del joc
+	    timer.start();
+	    // Guarden la referencia del timer dins del joc
+	    game.setGameTimer(timer);
 	}
 }

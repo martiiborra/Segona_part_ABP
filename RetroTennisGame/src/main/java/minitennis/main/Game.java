@@ -33,16 +33,28 @@ import java.io.ObjectOutputStream;
 import Data.GameData;
 import Data.GameData.BallState;
 import java.util.Properties;
-
+import javax.swing.KeyStroke;
 
 /**
- * * Classe Game que hereta de JPanel, funciona com a motor principal del joc.
- * @author Candela Cabello, André Medinas, Izan Perez, Daner Coria i Adrià Chenovart
+ * Classe Game que hereta de JPanel, funciona com a motor principal del joc.
+ * @author Primera part Grup 4
+ * @author Segona part Grup 1
  * */
 
 public class Game extends JPanel {
 
-	//Declaració i inicialització de final per el control de nivells on ha de sortir obstacles
+	// Declaracio i inicialitzacio de variables per pausar el joc
+	private static final String teclaPausa = "P";
+	private static final String accioPausa = "pauseGame";
+	//Declaracio i inicialitzacio de variables que contenen les imatges del joc
+	private static final String IMG_FONDO_BASE = "/Imatge/fondovideojuego.jpg";
+	private static final String IMG_FONDO_2 = "/Imatge/fondovideojuego2.jpg";
+	private static final String IMG_FONDO_3 = "/Imatge/fondovideojuego3.jpg";
+	private static final String IMG_FONDO_4 = "/Imatge/fondovideojuego4.jpg";
+	private static final String IMG_FONDO_5 = "/Imatge/fondovideojuego5.jpg";
+	private static final String IMG_FONDO_6 = "/Imatge/fondovideojuego6.jpg";
+	
+	// Declaració i inicialització de final per el control de nivells on ha de sortir obstacles
 	private final int NIVELL_MINIM_OBSTACLES = 2;
 
 	private static final long serialVersionUID = 1L;
@@ -84,25 +96,25 @@ public class Game extends JPanel {
 	// Variable per guardar la referència del Timer del joc perquè es pugui detenir
 	private Timer gameTimer = null;
 	
-	//VARIABLE DE MODE DE JOC
+	//Declaracio de la variable per el mode de joc
 	private int modoJuego;
 	
-	//VARIABLE DE JUGADORACTUAL
+	//Variable que indica el jugador que esta jugan en aquell moment
 	private int jugadorActual = 1;
 
-	//VARIABLES DE PUNTUACIONS
+	//Variables que emmagatzemen les puntuacions dels 2 jugadors una vegada termina la partida
 	private int puntuacionJugador1 = 0;
 	private int puntuacionJugador2 = 0;
 	
-	//VARIABLE PER REINICIAR DESDE EL NIVEL SELECCIONAT
+	//Variable per reiniciar la partida de jugador 2 des de el nivell seleccionat a menu
 	private int selectedLevel;
 	
-	
+	//Variables que emmagatzemen informacio dels jugadors
 	private String jugador1;
 	private String jugador2;
 	private String nickname;
 	
-	//VARIABLE PER PAUSAR PARTIDA
+	//Variable que cambia a true cuan es pausa la partida
 	private boolean paused = false;
 
 	// VARIABLES PER EL ARXIU DE CONFIGURACCIÓ
@@ -116,29 +128,22 @@ public class Game extends JPanel {
 	
 	/**
 	 * Constructor del joc. Inicialitza components i escoltadors d'entrada.
-	 * @param playerName,    nom del jugador
+	 * @param jugador1,    nom de jugador1
+	 * @param jugador2,    nom de jugador2
+	 * @param nickname,    nom dels dos jugadors com a grup
 	 * @param selectedLevel, nivell inicial seleccionat
+	 * @param language,    llenguatge seleccionat (angles, catala o castella)
+	 * @param modoJuego,   mode de joc seleccionat (sigle o asincron)
 	 * */
 	
-	//AFEGIM MODE JOC I AFEGIM ELS 2 JUGADORS I NICKNAME
+	//Afegim al constructor les variables modoJuego, jugador1, jugador2 i nickname
 	public Game(String jugador1, String jugador2, String nickname, int selectedLevel, String language, int modoJuego) {
 
 		// IMPORTANT: Reiniciem l'estat de control per si venim d'una partida anterior
 		this.gameEnded = false; 
 		
-		this.jugador1 = jugador1;
-		this.jugador2 = jugador2;
-		this.nickname = nickname;
-		
-		
-		 this.playerName = nickname;
-		 this.language = language;
-		 
-		// configuracio
-		 this.modoJuego = modoJuego;
-
-		 this.selectedLevel = selectedLevel;
-		 Game.level = selectedLevel;
+		initGameBasics(jugador1, jugador2, nickname, language, modoJuego, selectedLevel);
+		//configuracio
 
 		 // Carreguem la configuració del fitxer
 		 carregarConfiguracio();
@@ -151,12 +156,7 @@ public class Game extends JPanel {
 		     idiomaConfig = language;
 		     guardarConfiguracio();
 		 }
-		 
-		 
-		 
-		
-		
-		 
+	
 		Ball primeraBola = new Ball(this);
 
 		//Declaració i incialització de variable que calcula la velocitat dinàmica de la pilota
@@ -171,147 +171,32 @@ public class Game extends JPanel {
 		//Afegim a la llista la bola
 		balls.add(primeraBola);
 
-		// Estructura de control d'errors TRY-CATCH, gestiona el fons del videojoc
-		try {
-
-			/*
-			 * Localitza, carrega i extreu la imatge del fitxer de fons per a la seva
-			 * posterior renderització en el panell del joc.
-			 */
-			fons = new ImageIcon(getClass().getResource("/Imatge/fondovideojuego.jpg")).getImage();
-
-			// Càrrega de l'array de fons
-			fondos[0] = new ImageIcon(getClass().getResource("/Imatge/fondovideojuego.jpg")).getImage();
-			fondos[1] = new ImageIcon(getClass().getResource("/Imatge/fondovideojuego2.jpg")).getImage();
-			fondos[2] = new ImageIcon(getClass().getResource("/Imatge/fondovideojuego3.jpg")).getImage();
-			fondos[3] = new ImageIcon(getClass().getResource("/Imatge/fondovideojuego4.jpg")).getImage();
-			fondos[4] = new ImageIcon(getClass().getResource("/Imatge/fondovideojuego5.jpg")).getImage();
-			fondos[5] = new ImageIcon(getClass().getResource("/Imatge/fondovideojuego6.jpg")).getImage();
-
-		} catch (Exception e) {
-
-			// Si es produiex alguna mena d'excepció la capturem i mostrem el missatge
-			System.out.println("No se pudo cargar la imagen de fondo.");
-
-		}
+		// Cridem al metode que carrega el fons
+		cargarFondos();
 
 		// Actualitzem els obstacles segons el nivell
 		actualitzarObstacles(Game.level);
-
-		/*
-		 * Mètode del JPanel que registra un "escoltador" per detectar quan l'usuari
-		 * prem tecles. 
-		 */
-		addKeyListener(new KeyAdapter() {
-
-			/**
-			 * Mètode que s'executa automàticament en el moment que es prem una tecla.
-			 * Delega l'acció a la raqueta (racquet.keyPressed(e)) per iniciar el moviment.
-			 */
-			public void keyPressed(KeyEvent e) {
-
-			    if (e.getKeyCode() == KeyEvent.VK_C) {
-			        canviarColorPantallaPuntuacio();
-			    } else {
-			        racquet.keyPressed(e);
-			    }
-			}
-
-			/** * Mètode que s'executa quan l'usuari deixa anar la tecla. Indica a la raqueta
-			 * (racquet.keyReleased(e)) que s'ha d'aturar.
-			 */
-			public void keyReleased(KeyEvent e) {
-
-				racquet.keyReleased(e);
-
-			}
-
-		});
-
 		
 		// Permet rebre focus per al teclat
 		setFocusable(true);
 		
 
+		// Cridem al metode que te els controls
+		initControls();		
 		
-		setRequestFocusEnabled(true);
-		/*
-		 * Registra un escoltador per detectar el moviment del cursor del ratolí dins de
-		 * la finestra del joc.
-		 */
-		
-		addMouseListener(new java.awt.event.MouseAdapter() {
-		    @Override
-		    public void mousePressed(java.awt.event.MouseEvent e) {
-		        requestFocusInWindow();
-		    }
-		});
-		
-		
-		addMouseMotionListener(new MouseMotionAdapter() {
-			
-			// Mètode que s'activa cada vegada que el ratolí es desplaça.
-			public void mouseMoved(MouseEvent e) {
-
-				/*
-				 * Obté la coordenada horitzontal (X) del cursor i l'envia a la raqueta per
-				 * posicionar-la exactament en aquest punt.
-				 */
-				racquet.setMouse(e.getX());
-
-			}
-
-		});
-
-		
-
 		// Reproducció del so de fons
 		sonido.playFondo();
-		
-		requestFocusInWindow();
-		
 		SwingUtilities.invokeLater(() -> requestFocusInWindow());
 
-	}
-	
-	public void addNotify() {
-	    super.addNotify();
-	    
-	    
-	getInputMap(WHEN_IN_FOCUSED_WINDOW).put(
-	        javax.swing.KeyStroke.getKeyStroke("P"),
-	        "pauseGame"
-	);
-
-	getActionMap().put("pauseGame", new javax.swing.AbstractAction() {
-	    @Override
-	    public void actionPerformed(java.awt.event.ActionEvent e) {
-	    	System.out.println("P FUNCIONA");
-	        togglePause();
-	    }
-	});
-	
 	}
 	
 	
 	
 	public Game(GameData data, String language) {
 
-	    this.jugador1 = data.jugador1;
-	    this.jugador2 = data.jugador2;
-	    this.nickname = data.nickname;
-
-	    this.modoJuego = data.modoJuego;
-	    this.jugadorActual = data.jugadorActual;
-
-	    this.puntuacionJugador1 = data.puntuacionJugador1;
-	    this.puntuacionJugador2 = data.puntuacionJugador2;
-
+		//Guardem idioma seleccionat
+		this.language = language;
 	    this.score = data.score;
-	    Game.level = data.level;
-
-	    
-	    
 	    this.selectedLevel = data.level;
 	    Game.level = data.level;
 
@@ -332,13 +217,21 @@ public class Game extends JPanel {
 
 	    actualitzarObstacles(level);
 	    setFocusable(true);
-	    sonido.playFondo();
 	    
 	    racquet = new Racquet(this);
-	    sonido.playFondo();
+	
 	    
+		//Carreguem els fons
+		cargarFondos();
+		// Si hi ha dades guardades les carreguem
 	    if (data != null) {
 	        cargarEstado(data);
+	    } else {
+	    	// Si no hi ha partida inicialitzem valors per defecte
+	        this.modoJuego = 0;
+	        this.jugadorActual = 1;
+	        // Generem els obstacles del nivell inicial
+	        actualitzarObstacles(level);
 	    }
 	    
 	    carregarConfiguracio();
@@ -754,9 +647,7 @@ private void aplicarColorPuntuacio(String color) {
 	    }
 	    gameEnded = true;
 	    
-		if (gameTimer != null) {
-		    gameTimer.stop();
-		}
+	    stopTimer();
 
 	    // 2. Aturem sons i posem el de derrota
 	    sonido.stopFondo();
@@ -770,12 +661,12 @@ private void aplicarColorPuntuacio(String color) {
 	    String langPartida = (this.language != null) ? this.language : "EN";
 	    ctrl.setIdiomaActual(langPartida);
 
-	    //SI EL MODE DE JOC ES ASINCRON
-	        if (modoJuego == 1) { // ASINCRONO
+	    //Si el mode de joc es asincron
+	        if (modoJuego == 1) { 
 
 	            if (jugadorActual == 1) {
-	                puntuacionJugador1 = (int) score; // GUARDA EL SCORE
-	                
+	                puntuacionJugador1 = (int) score; // Guarda la puntuacio
+	                // Mostrem que el torn del jugador 1 ha acabat, i que toca al jugador 2
 	                JOptionPane.showMessageDialog(this,
 	                        "Turno de " + jugador1 + " terminado.\nPuntuación: " + puntuacionJugador1 +
 	                        "\nAhora juega: " + jugador2
@@ -783,16 +674,23 @@ private void aplicarColorPuntuacio(String color) {
 	                
 	                jugadorActual = 2;
 
-	                // REINICIA PARTIDA PER JUGADOR 2
+	                // Reinicia la partida per al jugador 2
+	                paused = false;
+	                
 	                resetGame();
 	                gameEnded = false;
+	                
+	                
+	                startTimer();
+	                
 	                return;
+	                
 
 	            } else {
 	                puntuacionJugador2 = (int) score;
-
+	                // Sumem les puntuacions
 	                int total = puntuacionJugador1 + puntuacionJugador2;
-
+	                //Mmostrem puntuacions per separat i la suma
 	                JOptionPane.showMessageDialog(this,
 	                        "Equipo: " + nickname +
 	                        "\n" + jugador1 + ": " + puntuacionJugador1 +
@@ -803,7 +701,8 @@ private void aplicarColorPuntuacio(String color) {
 	            }
 
 	        } else {
-	            // MODO NORMAL
+	            // Mode normal
+	        	//quan termina la partida mostrem game over
 	            JOptionPane.showMessageDialog(this, "Game Over");
 	            System.exit(0);
 	        }
@@ -851,21 +750,9 @@ private void aplicarColorPuntuacio(String color) {
 	
 	private void resetGame() {
 
-		gameEnded = false;  //POSEM GAME ENDED FALSE PER REINICIAR LA PARTIDA EN EL MODE ASINCRON
-		 
-	    balls.clear();
-	    obstacles.clear();
-
-	    racquet = new Racquet(this);
-
-	    level = selectedLevel;
-	    Ball b = new Ball(this);
-	    b.setSpeed(Utils.VELOCIDAD_BASE);
-	    balls.add(b);
-
-	    score = 0;
-	    startTime = System.currentTimeMillis();
-	    lastPointUpdate = System.currentTimeMillis();
+		resetGameState();
+	    resetEntities();
+	    resetScoreState();
 	}
 
 	/**
@@ -925,62 +812,63 @@ private void aplicarColorPuntuacio(String color) {
 
 	}
 	
-	//METODO PARA GUARDAR LA PARTIDA
+	/**
+	 * Metode que guarda el estat de les variables en el moment en el que es crida
+	 */
 	public void guardarPartida() {
 	    try {
 	        GameData data = new GameData();
 
+	        //Nivell i puntuacio
 	        data.level = level;
 	        data.score = score;
-
+	        // Jugadors i nickname
 	        data.jugador1 = jugador1;
 	        data.jugador2 = jugador2;
 	        data.nickname = nickname;
-
+	        // Mode de joc i jugador actual (en cas de mode asincron)
 	        data.modoJuego = modoJuego;
 	        data.jugadorActual = jugadorActual;
-
+	        // Puntuacions dels jugadors
 	        data.puntuacionJugador1 = puntuacionJugador1;
 	        data.puntuacionJugador2 = puntuacionJugador2;
-
-	        
-	        // GUARDAR RAQUETA
+	        // Guarda posicio de la raqueta
 	        data.racquetX = racquet.getX();
 
-	        // GUARDAR BOLAS
+	        // Guarda la bola
 	        data.balls = new ArrayList<>();
 	        
 	        for (Ball b : balls) {
 	            BallState bs = new BallState();
-
+	            // Guarda posicio de la bola
 	            bs.x = b.getX();
 	            bs.y = b.getY();
-
+	            // Guarda velocitat de la bola
 	            bs.speed = b.getSpeed();
 
-	            // si tienes dirección:
+	            // Guarda la direccio de la bola
 	            bs.directionX = b.getDx();
 	            bs.directionY = b.getDy();
 
 	            data.balls.add(bs);
 	        }
 	        
-	        // GUARDAR OBSTÁCULOS
+	        // Guarda la posicio dels obstacles
 	        data.obstacleX = new ArrayList<>();
 	        data.obstacleY = new ArrayList<>();
-
+	        
 	        for (Obstacle o : obstacles) {
 	            data.obstacleX.add(o.getX());
 	            data.obstacleY.add(o.getY());
 	        }
-	        
+	        // Guarda tot aixo a un arxiu anomenat partida.dat
 	        ObjectOutputStream oos = new ObjectOutputStream(
 	                new FileOutputStream("partida.dat")
 	        );
 
 	        oos.writeObject(data);
 	        oos.close();
-
+	        // Mostrem per pantalla que s'ha guardat la partida
 	        JOptionPane.showMessageDialog(this, "Partida guardada");
 
 	    } catch (Exception e) {
@@ -989,7 +877,10 @@ private void aplicarColorPuntuacio(String color) {
 	}
 	
 	
-	// METODO PARA CARGAR LA PARTIDA
+	/**
+	 * metode que carrega la partida guardada com partida.dat
+	 * @return data en cas de no trobar la partida null
+	 */
 	public static GameData cargarPartida() {
 	    try {
 	        ObjectInputStream ois = new ObjectInputStream(
@@ -1006,26 +897,35 @@ private void aplicarColorPuntuacio(String color) {
 	    }
 	}
 	
+	/**
+	 * Metode que una vegada cargada la partida asignem tots els valors guardats
+	 * de la partida a les variables del joc
+	 * @param data
+	 */
 	private void cargarEstado(GameData data) {
 
+		//Nivell i puntuacio
 	    level = data.level;
 	    score = data.score;
 
+	    //Noms de jugadors
 	    jugador1 = data.jugador1;
 	    jugador2 = data.jugador2;
 	    nickname = data.nickname;
 
+	    //mode de joc i el jugador que estaba jugan en aquell moment
 	    modoJuego = data.modoJuego;
 	    jugadorActual = data.jugadorActual;
 
+	    //Les puntuacions finals de cada jugador
 	    puntuacionJugador1 = data.puntuacionJugador1;
 	    puntuacionJugador2 = data.puntuacionJugador2;
 
-	    // RAQUETA
+	    // Raqueta
 	    racquet = new Racquet(this);
 	    racquet.setX(data.racquetX);
 
-	    // BOLAS
+	    // Bola
 	    balls.clear();
 
 	    for (BallState bs : data.balls) {
@@ -1042,7 +942,7 @@ private void aplicarColorPuntuacio(String color) {
 	        balls.add(b);
 	    }
 
-	    // OBSTÁCULOS
+	    // Obstacle
 	    obstacles.clear();
 
 	    for (int i = 0; i < data.obstacleX.size(); i++) {
@@ -1063,17 +963,24 @@ private void aplicarColorPuntuacio(String color) {
 	        resumeGame();
 	    }
 	}
-	
+	/**
+	 * Metode que pausa la partida amb la tecla P
+	 */
 	private void pauseGame() {
 
+		//Pausem el joc
 	    paused = true;
 
-	    if (gameTimer != null) {
-	        gameTimer.stop();
-	    }
+	    // Pausem el timer
+	    stopTimer();
 
+	    // Pausem el so
 	    sonido.stopFondo();
 
+	    /*
+	     * Mostrem un missatge que diu que el joc esta en pausa y si es vol guardar
+	     * la partida o tornar al joc
+	     */
 	    int opcion = JOptionPane.showOptionDialog(
 	            this,
 	            "joc en pausa ¿Vols guardar la partida?",
@@ -1085,10 +992,13 @@ private void aplicarColorPuntuacio(String color) {
 	            "Seguir jugant"
 	    );
 
+	    // Si escull guardar partida
 	    if (opcion == 0) {
 
+	    	// Cridem al metode que guarda la partida
 	        guardarPartida();
 
+	        //Tancem finestra del joc
 	        JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(this);
 	        frame.dispose();
 
@@ -1098,18 +1008,182 @@ private void aplicarColorPuntuacio(String color) {
 	    resumeGame();
 	}
 	
+	/**
+	 * Metode que reanuda el joc
+	 */
 	private void resumeGame() {
 
+		// Quitem el pause, activem timer i musica de fons
 	    paused = false;
-
-	    if (gameTimer != null) {
-	        gameTimer.start();
-	    }
-
+	    startTimer();
 	    sonido.playFondo();
 	}
 	
-	
-	
+	/**
+	 * Metode que carrega els fons del joc com la del menu o la de dins del joc
+	 */
+	private void cargarFondos() {
 
+	    try {
+
+	    	fons = new ImageIcon(getClass().getResource(IMG_FONDO_BASE)).getImage();
+
+	    	fondos[0] = new ImageIcon(getClass().getResource(IMG_FONDO_BASE)).getImage();
+	    	fondos[1] = new ImageIcon(getClass().getResource(IMG_FONDO_2)).getImage();
+	    	fondos[2] = new ImageIcon(getClass().getResource(IMG_FONDO_3)).getImage();
+	    	fondos[3] = new ImageIcon(getClass().getResource(IMG_FONDO_4)).getImage();
+	    	fondos[4] = new ImageIcon(getClass().getResource(IMG_FONDO_5)).getImage();
+	    	fondos[5] = new ImageIcon(getClass().getResource(IMG_FONDO_6)).getImage();
+
+	    } catch (Exception e) {
+	    	// Si no es pot carregar el fons imprimim
+	        System.out.println("No se pudo cargar la imagen de fondo.");
+
+	    }
+	}
+	
+	/**
+	 * Metode que conte els controls del joc, raqueta, focus, tecla pause, mouse
+	 */
+	
+	private void initControls() {
+
+	    /*
+		 * Mètode del JPanel que registra un "escoltador" per detectar quan l'usuari
+		 * prem tecles. 
+		 */
+		addKeyListener(new KeyAdapter() {
+
+			/**
+			 * Mètode que s'executa automàticament en el moment que es prem una tecla.
+			 * Delega l'acció a la raqueta (racquet.keyPressed(e)) per iniciar el moviment.
+			 */
+			public void keyPressed(KeyEvent e) {
+
+			    if (e.getKeyCode() == KeyEvent.VK_C) {
+			        canviarColorPantallaPuntuacio();
+			    } else {
+			        racquet.keyPressed(e);
+			    }
+			}
+			
+
+			/** * Mètode que s'executa quan l'usuari deixa anar la tecla. Indica a la raqueta
+			 * (racquet.keyReleased(e)) que s'ha d'aturar.
+			 */
+			public void keyReleased(KeyEvent e) {
+
+				racquet.keyReleased(e);
+
+			}
+
+		});
+
+	    // Focus
+	    setFocusable(true);
+	    setRequestFocusEnabled(true);
+
+	    // Tecla de pausa
+	    getInputMap(WHEN_IN_FOCUSED_WINDOW).put(
+	            KeyStroke.getKeyStroke(teclaPausa),
+	            accioPausa
+	    );
+
+	    getActionMap().put(accioPausa, new javax.swing.AbstractAction() {
+	        @Override
+	        public void actionPerformed(java.awt.event.ActionEvent e) {
+	            togglePause();
+	        }
+	    });
+
+	    // Click ratoli
+	    addMouseListener(new java.awt.event.MouseAdapter() {
+	        @Override
+	        public void mousePressed(java.awt.event.MouseEvent e) {
+	            requestFocusInWindow();
+	        }
+	    });
+
+	    // Moviment ratoli
+	    addMouseMotionListener(new MouseMotionAdapter() {
+	        @Override
+	        public void mouseMoved(MouseEvent e) {
+	            racquet.setMouse(e.getX());
+	        }
+	    });
+	}
+	
+	/**
+	 * Metode que inicialitza les variables del joc com els jugadors llenguatge etc.
+	 * @param jugador1
+	 * @param jugador2
+	 * @param nickname
+	 * @param language
+	 * @param modoJuego
+	 * @param selectedLevel
+	 */
+	
+	private void initGameBasics(String jugador1, String jugador2, String nickname, String language, int modoJuego, int selectedLevel) {
+	    
+		this.jugador1 = jugador1;
+	    this.jugador2 = jugador2;
+	    this.nickname = nickname;
+
+	    this.language = language;
+	    this.modoJuego = modoJuego;
+
+	    this.selectedLevel = selectedLevel;
+	    Game.level = selectedLevel;
+
+	    this.playerName = nickname;
+	}
+	
+	/**
+	 * Metode per pausar timer
+	 */
+	private void stopTimer() {
+	    if (gameTimer != null) {
+	        gameTimer.stop();
+	    }
+	}
+
+	/**
+	 * Metode per començar timer
+	 */
+	private void startTimer() {
+	    if (gameTimer != null) {
+	        gameTimer.start();
+	    }
+	}
+	
+	/**
+	 * Metode que fa reset al estat del joc
+	 */
+	private void resetGameState() {
+	    gameEnded = false;
+	    paused = false;
+	}
+	/**
+	 * Metode que fa reset a la puntuacio
+	 */
+	private void resetScoreState() {
+	    score = 0;
+	    startTime = System.currentTimeMillis();
+	    lastPointUpdate = System.currentTimeMillis();
+	}
+	/**
+	 * Metode que fa reset de les entitats (bola, raqueta i obstacles)S
+	 */
+	private void resetEntities() {
+	    balls.clear();
+	    obstacles.clear();
+	    racquet = new Racquet(this);
+
+	    level = selectedLevel;
+
+	    Ball b = new Ball(this);
+	    b.setSpeed(Utils.VELOCIDAD_BASE);
+	    balls.add(b);
+		actualitzarObstacles(level);
+	}
 }

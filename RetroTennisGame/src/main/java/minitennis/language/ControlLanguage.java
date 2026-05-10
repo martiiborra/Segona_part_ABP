@@ -7,7 +7,8 @@ import minitennis.utils.Utils;
  * Aquesta classe actua com donar una definició per cada opció escollida.
  * La seva funció és depenent de l'opció d'idioma escollida (àngles, català i castellà)
  * doncs retorna les seves definicions
- * * @autor André Medinas, Candela Cabello, Daner Coria, Izan Perez i Adrià Chenovart
+ * @autor Primera part Grup 4
+ * @author Segona part Grup 1
  */
 public class ControlLanguage {
 	// Defineixen els identificadors d'idioma suportats per l'aplicació
@@ -55,7 +56,7 @@ public class ControlLanguage {
             case "nom_usuari": return "Introdueix el teu nom:";
             case "error_nom": return "Has d'introduir un nom!";
             case "controles": return "CONTROLS";
-            case "info_controles": return "Fletxes o Ratolí per moure la pala.";
+            case "info_controles": return "Fletxes o Ratolí per moure la pala, 'P' per pausar la partida";
             case "cambiar_idioma": return "CANVIAR IDIOMA";
             case "sortir": return "SORTIR";
             case "guia_menu": return "Fletxes per navegar, ENTER per seleccionar";
@@ -75,7 +76,7 @@ public class ControlLanguage {
             case "nom_usuari": return "Introduce tu nombre:";
             case "error_nom": return "¡Debes introducir un nombre!";
             case "controles": return "CONTROLES";
-            case "info_controles": return "Flechas o Ratón para mover la pala.";
+            case "info_controles": return "Flechas o Ratón para mover la pala, 'P' para pausar el juego";
             case "cambiar_idioma": return "CAMBIAR IDIOMA";
             case "sortir": return "SALIR";
             case "guia_menu": return "Flechas para navegar, ENTER para seleccionar";
@@ -95,7 +96,7 @@ public class ControlLanguage {
             case "nom_usuari": return "Enter your name:";
             case "error_nom": return "You must enter a name!";
             case "controles": return "CONTROLS";
-            case "info_controles": return "Arrows or Mouse to move the paddle.";
+            case "info_controles": return "Arrows or Mouse to move the paddle, 'P' pause the game";
             case "cambiar_idioma": return "CHANGE LANGUAGE";
             case "sortir": return "EXIT";
             case "guia_menu": return "ARROWS to navigate, ENTER to select";
