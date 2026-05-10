@@ -226,13 +226,15 @@ public class Game extends JPanel {
 		// Si hi ha dades guardades les carreguem
 	    if (data != null) {
 	        cargarEstado(data);
-	    } else {
+	        
+	    }else {
+	    	
 	    	// Si no hi ha partida inicialitzem valors per defecte
 	        this.modoJuego = 0;
 	        this.jugadorActual = 1;
 	        // Generem els obstacles del nivell inicial
 	        actualitzarObstacles(level);
-	    }
+	    };
 	    
 	    carregarConfiguracio();
 
@@ -243,6 +245,10 @@ public class Game extends JPanel {
 	        idiomaConfig = language;
 	        guardarConfiguracio();
 	    }
+	    
+	    initControls();
+	    sonido.playFondo();
+	    SwingUtilities.invokeLater(() -> requestFocusInWindow());
 	}
 
 	/**

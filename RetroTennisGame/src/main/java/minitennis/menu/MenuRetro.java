@@ -224,11 +224,13 @@ public class MenuRetro extends JPanel {
         JFrame gameFrame = new JFrame("Retro Tenis - " + nombre);
         // Creem una nova instancia //ANTES ESTABA GAME GAME AHORA HE CAMBIADO
         GameData data = new GameData();
-        Game game = new Game(data, controlLang.getIdiomaActual());
+        
         data.jugador1 = nombre;
         data.nickname = nombre;
         data.level = nivel;
         data.modoJuego = modoJuego;
+        
+        Game game = new Game(data, controlLang.getIdiomaActual());
         // Afegim el component del joc a la finestra creada
         gameFrame.add(game);
         // Definim la mida de la finestra del joc
@@ -241,6 +243,7 @@ public class MenuRetro extends JPanel {
         // Creem un nou temporizador que s'executa cada 10 ms i l'inicia
         new Timer(10, e -> { game.move(); game.repaint(); }).start();
         game.requestFocusInWindow();
+        
     }
     
     /**
