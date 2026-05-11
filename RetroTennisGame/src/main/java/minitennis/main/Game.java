@@ -32,8 +32,8 @@ import java.io.FileOutputStream;
 import java.io.ObjectOutputStream;
 import Data.GameData;
 import Data.GameData.BallState;
+import java.util.Properties;
 import javax.swing.KeyStroke;
-
 
 /**
  * Classe Game que hereta de JPanel, funciona com a motor principal del joc.
@@ -117,6 +117,15 @@ public class Game extends JPanel {
 	//Variable que cambia a true cuan es pausa la partida
 	private boolean paused = false;
 
+	// VARIABLES PER EL ARXIU DE CONFIGURACCIÓ
+	private String idiomaConfig = "CA";
+	private int volum = 70;
+
+	private Color colorPantallaPuntuacio = Color.WHITE;
+	private String[] colorsDisponibles = {"blanc", "groc", "verd"};
+	private int indexColorActual = 0;
+	
+	
 	/**
 	 * Constructor del joc. Inicialitza components i escoltadors d'entrada.
 	 * @param jugador1,    nom de jugador1
@@ -134,7 +143,20 @@ public class Game extends JPanel {
 		this.gameEnded = false; 
 		
 		initGameBasics(jugador1, jugador2, nickname, language, modoJuego, selectedLevel);
-		
+		//configuracio
+
+		 // Carreguem la configuració del fitxer
+		 carregarConfiguracio();
+
+		 // Si no arriba idioma, fem servir el del fitxer config
+		 if (language == null) {
+		     this.language = idiomaConfig;
+		 } else {
+		     this.language = language;
+		     idiomaConfig = language;
+		     guardarConfiguracio();
+		 }
+	
 		Ball primeraBola = new Ball(this);
 
 		//Declaració i incialització de variable que calcula la velocitat dinàmica de la pilota
@@ -155,6 +177,9 @@ public class Game extends JPanel {
 		// Actualitzem els obstacles segons el nivell
 		actualitzarObstacles(Game.level);
 		
+		// Permet rebre focus per al teclat
+		setFocusable(true);
+		
 
 		// Cridem al metode que te els controls
 		initControls();		
@@ -166,37 +191,64 @@ public class Game extends JPanel {
 	}
 	
 	
-	/**
-	 * Constructor del joc quan es carrega una partida guardada
-	 * Si existeix una partida es restaurara la seva estada.
-	 * Si no, es inicialitza una nova partida amb valors per defecte
-	 * @param data
-	 * @param language
-	 */
+	
 	public Game(GameData data, String language) {
 
 		//Guardem idioma seleccionat
 		this.language = language;
+	    this.score = data.score;
+	    this.selectedLevel = data.level;
+	    Game.level = data.level;
 
+	    this.modoJuego = data.modoJuego;
+	    this.jugadorActual = data.jugadorActual;
+
+	    this.puntuacionJugador1 = data.puntuacionJugador1;
+	    this.puntuacionJugador2 = data.puntuacionJugador2;
+
+	    this.jugador1 = data.jugador1;
+	    this.jugador2 = data.jugador2;
+	    this.nickname = data.nickname;
+	    this.playerName = data.nickname;
+
+	    // INITCIALITZEM TOT
+	    Ball b = new Ball(this);
+	    balls.add(b);
+
+	    actualitzarObstacles(level);
+	    setFocusable(true);
+	    
+	    racquet = new Racquet(this);
+	
+	    
 		//Carreguem els fons
 		cargarFondos();
 		// Si hi ha dades guardades les carreguem
 	    if (data != null) {
 	        cargarEstado(data);
-	    } else {
+	        
+	    }else {
+	    	
 	    	// Si no hi ha partida inicialitzem valors per defecte
 	        this.modoJuego = 0;
 	        this.jugadorActual = 1;
 	        // Generem els obstacles del nivell inicial
 	        actualitzarObstacles(level);
+	    };
+	    
+	    carregarConfiguracio();
+
+	    if (language == null) {
+	        this.language = idiomaConfig;
+	    } else {
+	        this.language = language;
+	        idiomaConfig = language;
+	        guardarConfiguracio();
 	    }
 	    
-	    //Cridem al metode que te els controls
 	    initControls();
-	    //Iniciem la musica de fons
 	    sonido.playFondo();
-	    
-	    
+	    SwingUtilities.invokeLater(() -> requestFocusInWindow());
 	}
 
 	/**
@@ -300,7 +352,160 @@ public class Game extends JPanel {
 		}
 
 	}
+	// configuracio
+	
 
+private void carregarConfiguracio() {
+
+    Properties p = new Properties(); 
+
+
+
+    try {
+
+        FileInputStream entrada = new FileInputStream("config.properties");
+
+        p.load(entrada);
+
+        entrada.close(); 
+
+
+
+       
+
+        idiomaConfig = p.getProperty("idioma", "CA");
+
+        volum = Integer.parseInt(p.getProperty("volum", "70"));
+
+
+
+        String colorGuardat = p.getProperty("colorPuntuacio", "blanc");
+
+        aplicarColorPuntuacio(colorGuardat);
+
+
+
+    } catch (Exception e) {
+
+        System.out.println("No hi ha fitxer de config, creant un de nou...");
+
+        idiomaConfig = "CA";
+
+        volum = 70;
+
+        aplicarColorPuntuacio("blanc");
+
+        guardarConfiguracio(); 
+
+    }
+
+}
+
+
+
+private void guardarConfiguracio() {
+
+    Properties p = new Properties();
+
+
+
+    try {
+
+        p.setProperty("idioma", idiomaConfig);
+
+        p.setProperty("volum", String.valueOf(volum));
+
+        p.setProperty("colorPuntuacio", colorsDisponibles[indexColorActual]);
+
+
+
+        
+
+        FileOutputStream sortida = new FileOutputStream("config.properties");
+
+        p.store(sortida, "Configuracio del joc");
+
+        sortida.close();
+
+
+
+    } catch (Exception e) {
+
+        
+
+        e.printStackTrace();
+
+    }
+
+}
+
+private void canviarColorPantallaPuntuacio() {
+
+    indexColorActual++; 
+
+
+
+    
+
+    if (indexColorActual >= colorsDisponibles.length) {
+
+        indexColorActual = 0;
+
+    }
+
+    aplicarColorPuntuacio(colorsDisponibles[indexColorActual]);
+
+    guardarConfiguracio();
+
+    repaint(); 
+
+}
+
+private void aplicarColorPuntuacio(String color) {
+
+    if (color == null) {
+
+        color = "blanc";
+
+    }
+
+
+
+    if (color.equalsIgnoreCase("blanc")) {
+
+        colorPantallaPuntuacio = Color.WHITE;
+
+        indexColorActual = 0;
+
+
+
+    } else if (color.equalsIgnoreCase("groc")) {
+
+        colorPantallaPuntuacio = Color.YELLOW;
+
+        indexColorActual = 1;
+
+
+
+    } else if (color.equalsIgnoreCase("verd")) {
+
+        colorPantallaPuntuacio = Color.GREEN;
+
+        indexColorActual = 2;
+
+
+
+    } else {
+
+        colorPantallaPuntuacio = Color.WHITE;
+
+        indexColorActual = 0;
+
+    }
+
+}
+	
+	
 	/**
 	 * * Mètode principal de renderització del component.
 	 * @param g, Objecte Graphics que permet realitzar operacions de dibuix.
@@ -339,7 +544,7 @@ public class Game extends JPanel {
 		}
 
 		// Posem color blanc amb el mètode setColor, per la lletra
-		g2d.setColor(Color.WHITE);
+		g2d.setColor(colorPantallaPuntuacio);
 
 		// Amb el mètode setFont posem una font Retro, la lletra en negreta i la mida
 		g2d.setFont(new Font("SansSerif", Font.BOLD, 12));
@@ -849,19 +1054,36 @@ public class Game extends JPanel {
 	
 	private void initControls() {
 
-	    // Teclat (raqueta)
-	    addKeyListener(new KeyAdapter() {
+	    /*
+		 * Mètode del JPanel que registra un "escoltador" per detectar quan l'usuari
+		 * prem tecles. 
+		 */
+		addKeyListener(new KeyAdapter() {
 
-	        @Override
-	        public void keyPressed(KeyEvent e) {
-	            racquet.keyPressed(e);
-	        }
+			/**
+			 * Mètode que s'executa automàticament en el moment que es prem una tecla.
+			 * Delega l'acció a la raqueta (racquet.keyPressed(e)) per iniciar el moviment.
+			 */
+			public void keyPressed(KeyEvent e) {
 
-	        @Override
-	        public void keyReleased(KeyEvent e) {
-	            racquet.keyReleased(e);
-	        }
-	    });
+			    if (e.getKeyCode() == KeyEvent.VK_C) {
+			        canviarColorPantallaPuntuacio();
+			    } else {
+			        racquet.keyPressed(e);
+			    }
+			}
+			
+
+			/** * Mètode que s'executa quan l'usuari deixa anar la tecla. Indica a la raqueta
+			 * (racquet.keyReleased(e)) que s'ha d'aturar.
+			 */
+			public void keyReleased(KeyEvent e) {
+
+				racquet.keyReleased(e);
+
+			}
+
+		});
 
 	    // Focus
 	    setFocusable(true);
@@ -968,5 +1190,6 @@ public class Game extends JPanel {
 	    Ball b = new Ball(this);
 	    b.setSpeed(Utils.VELOCIDAD_BASE);
 	    balls.add(b);
+		actualitzarObstacles(level);
 	}
 }
