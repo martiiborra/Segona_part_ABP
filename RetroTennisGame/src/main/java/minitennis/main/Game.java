@@ -35,6 +35,10 @@ import Data.GameData.BallState;
 import javax.swing.JTextArea;
 import java.util.Properties;
 import javax.swing.KeyStroke;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
+import org.hibernate.SQLQuery;
 
 /**
  * Classe Game que hereta de JPanel, funciona com a motor principal del joc.
@@ -269,7 +273,7 @@ public class Game extends JPanel {
 
 		// Actualització de temps
 		lastPointUpdate = now;
-
+ 
 		// Estructura condicional on avaluem si arribem als 20s
 		if (now - startTime >= Utils.TIME_TO_LEVEL_UP) {
 
@@ -651,6 +655,8 @@ private void aplicarColorPuntuacio(String color) {
 	    String langPartida = (this.language != null) ? this.language : "EN";
 	    ctrl.setIdiomaActual(langPartida);
 
+	    guardarDadesHibernate();
+	    
 	    //Si el mode de joc es asincron
 	        if (modoJuego == 1) { 
 
@@ -1185,5 +1191,44 @@ private void aplicarColorPuntuacio(String color) {
 	    b.setSpeed(Utils.VELOCIDAD_BASE);
 	    balls.add(b);
 		actualitzarObstacles(level);
+	}
+	
+	private void guardarDadesHibernate() {
+	    // La URL neta que volies, sense afegits estranys
+	    String url = "jdbc:mysql://localhost/retro_tennis";
+	    String usuari = "root";
+	    String password = ""; 
+
+	    try {
+	        // Carreguem el driver (pas necessari per principiants)
+	        Class.forName("com.mysql.cj.jdbc.Driver");
+	        
+	        // Obrim la connexió de la manera més directa
+	        java.sql.Connection con = java.sql.DriverManager.getConnection(url, usuari, password);
+	        
+	        // Creem l'statement per enviar ordres a la base de dades
+	        java.sql.Statement st = con.createStatement();
+	        
+	        // Fem un INSERT directe a la taula. És el mètode que menys errors dóna, ja que hem
+	        //intentat fer el CALL, però no funciona.
+	        // Ajuntem les variablesplayerName, score i language amb el text SQL.
+	        String consulta = "INSERT INTO PARTIDES (name, score, language) VALUES ('" 
+	                          + this.playerName + "', " 
+	                          + (int) this.score + ", '" 
+	                          + this.language + "')";
+	        
+	        // Executem la sentència per guardar les dades
+	        st.executeUpdate(consulta);
+	        
+	        System.out.println("La partida de " + this.playerName + " s'ha guardat  amb èxit.");
+	        
+	        // Tanquem tot en acabar
+	        st.close();
+	        con.close();
+	        
+	    } catch (Exception e) {
+	        // Si falla alguna cosa, ens avisarà aquí
+	        System.out.println("Error general al intentar guardar les dades: " + e.getMessage());
+	    }
 	}
 }

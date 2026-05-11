@@ -1,6 +1,9 @@
 package minitennis.db;
 
 import java.sql.*;
+import org.hibernate.SessionFactory;
+import org.hibernate.cfg.Configuration;
+import minitennis.main.Partides;
 /**
  * Definició de la classe Connexio.
  * Aquesta classe actua com connector del joc amb la base de dades.
@@ -12,6 +15,7 @@ import java.sql.*;
 public class Connexio {
 	// Objecte que manté la connexió activa amb la BD
     private Connection cn = null;
+    private static SessionFactory sessionFactory;
 
     //Constructor: s'executa en crear l'objecte i estableix el primer intent de connexió
     public Connexio() {
@@ -123,5 +127,28 @@ public class Connexio {
     	c.consultarRanking();
 
     	}
+
+    public static SessionFactory getSessionFactory() {
+        if (sessionFactory == null) {
+            try {
+                Configuration configuration = new Configuration();
+                
+                // Configuració manual (Substitueix usuari i pass si cal)
+                configuration.setProperty("hibernate.connection.driver_class", "com.mysql.cj.jdbc.Driver");
+                configuration.setProperty("hibernate.connection.url", "jdbc:mysql://localhost:3306/retro_tennis");
+                configuration.setProperty("hibernate.connection.username", "root"); // El teu usuari
+                configuration.setProperty("hibernate.connection.password", "");     // La teva pass
+                configuration.setProperty("hibernate.dialect", "org.hibernate.dialect.MySQL5Dialect");
+                
+                // Afegim la classe
+                configuration.addAnnotatedClass(minitennis.main.Partides.class);
+                
+                sessionFactory = configuration.buildSessionFactory();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return sessionFactory;
+    }
 
     	}

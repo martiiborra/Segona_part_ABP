@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Generated May 11, 2026, 11:52:23 AM by Hibernate Tools 6.5.1.Final --><!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class catalog="retro_tennis" name="Segona_part_ABP.Partides" optimistic-lock="none" table="partides">
+        <id name="idPlayer" type="java.lang.Integer">
+            <column name="id_player"/>
+            <generator class="identity"/>
+        </id>
+        <property name="name" type="string">
+            <column length="200" name="name"/>
+        </property>
+        <property name="score" type="java.lang.Integer">
+            <column name="score"/>
+        </property>
+        <property name="date" type="timestamp">
+            <column length="19" name="date"/>
+        </property>
+        <property name="language" type="string">
+            <column length="15" name="language"/>
+        </property>
+    </class>
+</hibernate-mapping>
