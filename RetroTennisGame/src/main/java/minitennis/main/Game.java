@@ -46,7 +46,7 @@ public class Game extends JPanel {
 	// Declaracio i inicialitzacio de variables per pausar el joc
 	private static final String teclaPausa = "P";
 	private static final String accioPausa = "pauseGame";
-	//Declaracio i inicialitzacio de variables que contenen les imatges del joc
+	// Declaracio i inicialitzacio de variables que contenen les imatges del joc
 	private static final String IMG_FONDO_BASE = "/Imatge/fondovideojuego.jpg";
 	private static final String IMG_FONDO_2 = "/Imatge/fondovideojuego2.jpg";
 	private static final String IMG_FONDO_3 = "/Imatge/fondovideojuego3.jpg";
