@@ -240,17 +240,17 @@ public class NombreUsuarioMenu extends JPanel {
         // Si el mode de joc es Normal
         if (modoJuego == 0) {
         	// Mostrem nom jugador i l'usuari posara el seu nom
-            texto = "Nombre jugador";
+        	texto = controlLang.get("nom_jugador");
 
         } else { // Si el mode de joc es asincron
         	
         	// Mostrem jugador1, jugador2 i nickname per fases i els jugadors hauran d'omplir
-            if (fase == 1) {
-                texto = "Jugador 1";
+        	if (fase == 1) {
+                texto = controlLang.get("jugador1");
             } else if (fase == 2) {
-                texto = "Jugador 2";
+                texto = controlLang.get("jugador2");
             } else if (fase == 3) {
-                texto = "Nickname";
+                texto = controlLang.get("nickname");
             }
         }
         

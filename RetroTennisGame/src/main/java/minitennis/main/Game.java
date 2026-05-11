@@ -51,7 +51,7 @@ public class Game extends JPanel {
 	// Declaracio i inicialitzacio de variables per pausar el joc
 	private static final String teclaPausa = "P";
 	private static final String accioPausa = "pauseGame";
-	//Declaracio i inicialitzacio de variables que contenen les imatges del joc
+	// Declaracio i inicialitzacio de variables que contenen les imatges del joc
 	private static final String IMG_FONDO_BASE = "/Imatge/fondovideojuego.jpg";
 	private static final String IMG_FONDO_2 = "/Imatge/fondovideojuego2.jpg";
 	private static final String IMG_FONDO_3 = "/Imatge/fondovideojuego3.jpg";
@@ -663,10 +663,14 @@ private void aplicarColorPuntuacio(String color) {
 	            if (jugadorActual == 1) {
 	                puntuacionJugador1 = (int) score; // Guarda la puntuacio
 	                // Mostrem que el torn del jugador 1 ha acabat, i que toca al jugador 2
-	                JOptionPane.showMessageDialog(this,
-	                        "Turno de " + jugador1 + " terminado.\nPuntuación: " + puntuacionJugador1 +
-	                        "\nAhora juega: " + jugador2
-	                    );
+	                JOptionPane.showMessageDialog(
+	                        this,
+	                        ctrl.get("torn_acabat") + " " + jugador1 +
+	                        " terminado.\n" +
+	                        ctrl.get("puntuacio") + ": " + puntuacionJugador1 +
+	                        "\n" +
+	                        ctrl.get("ara_juga") + ": " + jugador2
+	                );
 	                
 	                jugadorActual = 2;
 
@@ -687,20 +691,25 @@ private void aplicarColorPuntuacio(String color) {
 	                // Sumem les puntuacions
 	                int total = puntuacionJugador1 + puntuacionJugador2;
 	                //Mmostrem puntuacions per separat i la suma
-	                JOptionPane.showMessageDialog(this,
-	                        "Equipo: " + nickname +
+	                JOptionPane.showMessageDialog(
+	                        this,
+	                        ctrl.get("equip") + ": " + nickname +
 	                        "\n" + jugador1 + ": " + puntuacionJugador1 +
 	                        "\n" + jugador2 + ": " + puntuacionJugador2 +
-	                        "\nTOTAL: " + total
-	                    );
+	                        "\n" + ctrl.get("total") + ": " + total
+	                );
 
 	            }
 
 	        } else {
 	            // Mode normal
 	        	//quan termina la partida mostrem game over
-	            JOptionPane.showMessageDialog(this, "Game Over");
-	            System.exit(0);
+	        	puntuacionJugador1 = (int) score;
+	        	JOptionPane.showMessageDialog(
+	        	        this,
+	        	        ctrl.get("puntuacio_final") + " " + jugador1 +
+	        	        "\n" + puntuacionJugador1
+	        	); 
 	        }
 
 
@@ -709,7 +718,7 @@ private void aplicarColorPuntuacio(String color) {
 	    try {
 	        Connexio c = new Connexio();
 	        // Li passem el nom, la puntuació (score) i l'idioma per a la DB
-	        rankingFinal = c.guardarPartida(playerName, (int) score, langPartida);
+	        rankingFinal = c.guardarPartida(nickname, (int) score, langPartida);
 	    } catch (Exception e) {
 	        rankingFinal = "Error loading ranking...";
 	    }
@@ -719,7 +728,7 @@ private void aplicarColorPuntuacio(String color) {
 
 	    // 5. Muntem el missatge final combinant les dades de la partida amb les traduccions
 	    String missatge = "--- " + ctrl.get("game_over_titol") + " ---\n\n" +
-	                      ctrl.get("jugador") + ": " + playerName + "\n" +
+	                      ctrl.get("Nom") + ": " + nickname + "\n" +
 	                      ctrl.get("puntuacio") + ": " + (int)score + " ms\n\n" +
 	                      ctrl.get("ranking_titol") + "\n" +
 	                      rankingFinal + "\n\n" +
@@ -987,15 +996,21 @@ private void aplicarColorPuntuacio(String color) {
 	     * Mostrem un missatge que diu que el joc esta en pausa y si es vol guardar
 	     * la partida o tornar al joc
 	     */
+	    ControlLanguage ctrl = new ControlLanguage();
+	    ctrl.setIdiomaActual(language);
+
 	    int opcion = JOptionPane.showOptionDialog(
 	            this,
-	            "joc en pausa ¿Vols guardar la partida?",
-	            "PAUSA",
+	            ctrl.get("joc_pausa"),
+	            ctrl.get("titol_pausa"),
 	            JOptionPane.YES_NO_CANCEL_OPTION,
 	            JOptionPane.INFORMATION_MESSAGE,
 	            null,
-	            new String[]{"Guardar y sortir", "Seguir jugant"},
-	            "Seguir jugant"
+	            new String[]{
+	                ctrl.get("guardar_sortir"),
+	                ctrl.get("seguir_jugant")
+	            },
+	            ctrl.get("seguir_jugant")
 	    );
 
 	    // Si escull guardar partida

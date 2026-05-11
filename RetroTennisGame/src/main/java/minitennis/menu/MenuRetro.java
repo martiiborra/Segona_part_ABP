@@ -222,7 +222,7 @@ public class MenuRetro extends JPanel {
         if (win != null) win.dispose();
         // Creem una nova finestra per al joc amb el titol que inclou el nom d'usuari
         JFrame gameFrame = new JFrame("Retro Tenis - " + nombre);
-        // Creem una nova instancia //ANTES ESTABA GAME GAME AHORA HE CAMBIADO
+        // Creem una nova instancia 
         GameData data = new GameData();
         
         data.jugador1 = nombre;
@@ -234,7 +234,7 @@ public class MenuRetro extends JPanel {
         // Afegim el component del joc a la finestra creada
         gameFrame.add(game);
         // Definim la mida de la finestra del joc
-        gameFrame.setSize(300, 400); //DEFINIR ATRIBUTOS
+        gameFrame.setSize(300, 400); 
         // Centrem la finestra automaticament al mig de la nostra pantalla
         gameFrame.setLocationRelativeTo(null);
         // Fem que la finestra sigui visible per a l'usuari

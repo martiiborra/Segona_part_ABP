@@ -65,6 +65,22 @@ public class ControlLanguage {
             case "puntuacio": return "Puntuació";
             case "ranking_titol": return "TOP 10 RÀNQUING ";
             case "tornar_jugar": return "Vols tornar a jugar?";
+            case "cargar_partida": return "CARREGAR PARTIDA";
+            case "nueva_partida": return "NOVA PARTIDA";
+            case "pregunta_partida": return "Què vols fer?";
+            case "joc_pausa": return "JOC EN PAUSA. Vols guardar la partida?";
+            case "guardar_sortir": return "GUARDAR I SORTIR";
+            case "seguir_jugant": return "SEGUIR JUGANT";
+            case "titol_pausa": return "PAUSA";
+            case "puntuacio_final": return "Puntuació final";
+            case "torn_acabat": return "Torn de";
+            case "ara_juga": return "Ara juga";
+            case "equip": return "Equip";
+            case "total": return "TOTAL";
+            case "nom_jugador": return "Nom jugador";
+            case "jugador1": return "Jugador 1";
+            case "jugador2": return "Jugador 2";
+            case "nickname": return "Nickname";
             default: return clau; 
             }
         case CASTELLA: // Cas en què l'idioma actiu és el Castellà
@@ -85,6 +101,22 @@ public class ControlLanguage {
             case "puntuacio": return "Puntuación";
             case "ranking_titol": return "TOP 10 RANKING";
             case "tornar_jugar": return "¿Quieres volver a jugar?";
+            case "cargar_partida": return "CARGAR PARTIDA";
+            case "nueva_partida": return "NUEVA PARTIDA";
+            case "pregunta_partida": return "¿Qué quieres hacer?";
+            case "joc_pausa": return "JUEGO EN PAUSA. ¿Quieres guardar la partida?";
+            case "guardar_sortir": return "GUARDAR Y SALIR";
+            case "seguir_jugant": return "SEGUIR JUGANDO";
+            case "titol_pausa": return "PAUSA";	
+            case "puntuacio_final": return "Puntuación final";
+            case "torn_acabat": return "Turno de";
+            case "ara_juga": return "Ahora juega";
+            case "equip": return "Equipo";
+            case "total": return "TOTAL";
+            case "nom_jugador": return "Nombre jugador";
+            case "jugador1": return "Jugador 1";
+            case "jugador2": return "Jugador 2";
+            case "nickname": return "Nickname";
             default: return clau;
             }
         default: // Idioma per defecte: English (s'executa si no és ni CAT ni ES)
@@ -105,6 +137,22 @@ public class ControlLanguage {
             case "puntuacio": return "Score";
             case "ranking_titol": return "TOP 10 RANKING";
             case "tornar_jugar": return "Do you want to play again?";
+            case "cargar_partida": return "LOAD GAME";
+            case "nueva_partida": return "NEW GAME";
+            case "pregunta_partida": return "What do you want to do?";
+            case "joc_pausa": return "GAME PAUSED. Do you want to save the game?";
+            case "guardar_sortir": return "SAVE AND EXIT";
+            case "seguir_jugant": return "CONTINUE PLAYING";
+            case "titol_pausa": return "PAUSE";
+            case "puntuacio_final": return "Final score";
+            case "torn_acabat": return "Turn of";
+            case "ara_juga": return "Now playing";
+            case "equip": return "Team";
+            case "total": return "TOTAL";
+            case "nom_jugador": return "Player name";
+            case "jugador1": return "Player 1";
+            case "jugador2": return "Player 2";
+            case "nickname": return "Nickname";
             default: return clau;
             }
         }
