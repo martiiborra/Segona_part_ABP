@@ -54,15 +54,17 @@ public class InitialWindow {
 		// Al iniciar el programa pregntem a l'usuari que vol fer
 		int opcion = JOptionPane.showOptionDialog(
 		        frame,
-		        "¿Qué quieres hacer?",
+		        controlLang.get("pregunta_partida"),
 		        "Retro Tennis",
 		        JOptionPane.DEFAULT_OPTION,
 		        JOptionPane.INFORMATION_MESSAGE,
 		        null,
-		        // Si vol una nova partida o carregar una nova partida
-		        new String[]{"Nueva partida", "Cargar partida"},
-		        "Nueva partida"
-		    );
+		        new String[]{
+		            controlLang.get("nueva_partida"),
+		            controlLang.get("cargar_partida")
+		        },
+		        controlLang.get("nueva_partida")
+		);
 		// Si l'usuari vol carregar una partida
 	    if (opcion == 1) {
 	    	//Intenta carregar les dades de una partida guardada
