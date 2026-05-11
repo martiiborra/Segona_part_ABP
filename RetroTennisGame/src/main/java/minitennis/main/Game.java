@@ -32,6 +32,7 @@ import java.io.FileOutputStream;
 import java.io.ObjectOutputStream;
 import Data.GameData;
 import Data.GameData.BallState;
+import javax.swing.JTextArea;
 import java.util.Properties;
 import javax.swing.KeyStroke;
 
@@ -401,8 +402,6 @@ private void carregarConfiguracio() {
 
 }
 
-
-
 private void guardarConfiguracio() {
 
     Properties p = new Properties();
@@ -442,17 +441,10 @@ private void guardarConfiguracio() {
 private void canviarColorPantallaPuntuacio() {
 
     indexColorActual++; 
-
-
-
     
-
     if (indexColorActual >= colorsDisponibles.length) {
-
         indexColorActual = 0;
-
     }
-
     aplicarColorPuntuacio(colorsDisponibles[indexColorActual]);
 
     guardarConfiguracio();
@@ -462,14 +454,6 @@ private void canviarColorPantallaPuntuacio() {
 }
 
 private void aplicarColorPuntuacio(String color) {
-
-    if (color == null) {
-
-        color = "blanc";
-
-    }
-
-
 
     if (color.equalsIgnoreCase("blanc")) {
 
@@ -732,6 +716,9 @@ private void aplicarColorPuntuacio(String color) {
 	    } catch (Exception e) {
 	        rankingFinal = "Error loading ranking...";
 	    }
+	    // Apliquem el color guardat abans de mostrar el menú
+	    
+
 
 	    // 5. Muntem el missatge final combinant les dades de la partida amb les traduccions
 	    String missatge = "--- " + ctrl.get("game_over_titol") + " ---\n\n" +
@@ -743,9 +730,16 @@ private void aplicarColorPuntuacio(String color) {
 
 	    // 6. Mostrem el quadre de text (JOptionPane)
 	    // Utilitzem 'this' per centrar-lo sobre el joc i el títol traduït
+	    JTextArea textMenu = new JTextArea(missatge);
+	    textMenu.setBackground(colorPantallaPuntuacio);
+	    textMenu.setOpaque(true);
+	    
+	    textMenu.setEditable(false);
+	    textMenu.setFocusable(false);
+
 	    int resposta = JOptionPane.showConfirmDialog(
 	        this, 
-	        missatge, 
+	        textMenu, 
 	        ctrl.get("game_over_titol"), 
 	        JOptionPane.YES_NO_OPTION,
 	        JOptionPane.INFORMATION_MESSAGE
